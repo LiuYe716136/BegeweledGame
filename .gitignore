@@ -1,0 +1,31 @@
+# --- Qt Creator 配置文件 (绝对不能上传) ---
+*.pro.user
+*.pro.user.*
+
+# --- 编译产生的临时文件夹 ---
+build/
+debug/
+release/
+bin/
+x64/
+
+# --- 编译产生的中间文件 ---
+Makefile*
+*.qmake.stash
+*.o
+*.obj
+*.moc
+*.ui
+
+# --- Qt 自动生成的 C++ 代码 (ui_xxx.h, moc_xxx.cpp) ---
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+
+# --- 可执行程序 ---
+*.exe
+*.dll
+
+# --- 其他系统垃圾 ---
+Thumbs.db
+.DS_Store
