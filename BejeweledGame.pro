@@ -1,32 +1,28 @@
 QT       += core gui multimedia
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# 包含路径
+INCLUDEPATH += $$PWD/src/model \
+               $$PWD/src/view
 
 SOURCES += \
-    core/GameMap.cpp \
-    core/Gem.cpp \
     main.cpp \
-    widget.cpp
+    src/model/Gem.cpp \
+    src/model/GameMap.cpp \
+    src/view/GameWidget.cpp
 
 HEADERS += \
-    core/Const.h \
-    core/GameMap.h \
-    core/Gem.h \
-    widget.h
+    src/model/Const.h \
+    src/model/Gem.h \
+    src/model/GameMap.h \
+    src/view/GameWidget.h
 
 FORMS += \
-    widget.ui
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+    src/view/GameWidget.ui
 
 RESOURCES += \
     resources.qrc
+
+DESTDIR = bin

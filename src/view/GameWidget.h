@@ -1,7 +1,7 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef GAMEWIDGET_H
+#define GAMEWIDGET_H
 
-#include "core/GameMap.h" // 包含核心逻辑
+#include "GameMap.h" // 包含核心逻辑
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSoundEffect>
@@ -15,12 +15,12 @@ class Widget;
 }
 QT_END_NAMESPACE
 
-class Widget : public QWidget {
+class GameWidget : public QWidget {
   Q_OBJECT
 
 public:
-  explicit Widget(QWidget *parent = nullptr);
-  ~Widget();
+  explicit GameWidget(QWidget *parent = nullptr);
+  ~GameWidget();
 
 protected:
   // ==========================================
@@ -45,9 +45,9 @@ private slots:
   // ==========================================
 
   // 对应 widget.ui 里的按钮
-  void on_btnReset_clicked(); // 重置
-  void on_btnHint_clicked();  // 提示 (拓展)
-  void on_btnUndo_clicked();  // 撤销 (拓展)
+  void on_btn_reset_clicked(); // 重置
+  void on_btn_hint_clicked();  // 提示 (拓展)
+  void on_btn_undo_clicked();  // 撤销 (拓展)
 
   /**
    * @brief 游戏主循环 (核心)
@@ -84,4 +84,4 @@ private:
   bool screenToRowCol(QPoint pt, int &r, int &c);
 };
 
-#endif // WIDGET_H
+#endif // GAMEWIDGET_H
