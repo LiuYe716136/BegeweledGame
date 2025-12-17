@@ -15,7 +15,6 @@ Makefile*
 *.o
 *.obj
 *.moc
-*.ui
 
 # --- Qt 自动生成的 C++ 代码 (ui_xxx.h, moc_xxx.cpp) ---
 ui_*.h

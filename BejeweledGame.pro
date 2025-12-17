@@ -9,7 +9,6 @@ INCLUDEPATH += $$PWD/src/model \
 
 SOURCES += \
     main.cpp \
-    src/model/Gem.cpp \
     src/model/GameMap.cpp \
     src/view/GameWidget.cpp
 

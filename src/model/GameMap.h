@@ -2,7 +2,7 @@
 #define GAMEMAP_H
 
 #include "Gem.h"
-#include <QPoint> // Qt坐标类
+#include <QPoint>
 #include <stack>
 #include <vector>
 
