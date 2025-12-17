@@ -8,9 +8,7 @@
 
 class GameMap {
 public:
-  // ==========================================
-  // 构造与初始化
-  // ==========================================
+  // 初始化
   GameMap();
 
   /**
@@ -19,17 +17,13 @@ public:
    */
   void init();
 
-  // ==========================================
-  // 核心数据 (实训为了方便可设为public，严谨点用getter)
-  // ==========================================
+  // 核心数据
   Gem m_map[ROW][COL];
 
-  // ==========================================
-  // 公共接口 (Widget调用这些)
-  // ==========================================
+  // 公共接口
 
   /**
-   * @brief 交换两个宝石 (纯数据层面的交换)
+   * @brief 交换两个宝石 (数据层面的交换)
    */
   void swap(int r1, int c1, int r2, int c2);
 
@@ -41,8 +35,7 @@ public:
 
   /**
    * @brief 执行消除
-   * @param points 要消除的坐标列表
-   * 将这些位置设为 EMPTY
+   * @param points 要消除的坐标集合,将这些位置设为 EMPTY
    */
   void eliminate(const std::vector<QPoint> &points);
 
@@ -53,29 +46,38 @@ public:
   void applyGravity();
 
   /**
-   * @brief 死局/提示检测 (拓展算法)
+   * @brief 重置
+   * @return true 表示重置成功
+   */
+  bool reset();
+
+  /**
+   * @brief 死局/提示检测
    * @return true 表示玩家还有步子可以走
    */
   bool hasPossibleMove();
 
-  // ==========================================
-  // 拓展功能：撤销 (栈的应用)
-  // ==========================================
+  /**
+   * @brief 撤销
+   * @return true 表示撤销成功
+   */
+  bool undo();
+
+  // 获取当前选中是否有效
+  bool isValid(int r, int c) const;
+  /**
+   * @brief 获取宝石类型
+   * @return
+   */
+  GemType getType(int r, int c) const;
+
+private:
+  // 撤销功能辅助结构体
   struct Step {
     Gem mapSnapshot[ROW][COL]; // 地图快照
     int scoreSnapshot;         // 分数快照
   };
 
-  bool undo(); // 执行撤销
-
-  // 获取当前状态是否有效 (给UI用的辅助)
-  bool isValid(int r, int c) const;
-  GemType getType(int r, int c) const;
-
-private:
-  // ==========================================
-  // 内部辅助
-  // ==========================================
   std::stack<Step> m_historyStack; // 历史记录栈
   void saveState();                // 保存当前状态到栈
 };

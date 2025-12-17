@@ -48,6 +48,8 @@ void GameMap::applyGravity() {
   // 3. 顶部的空位随机生成新宝石
 }
 
+bool GameMap::reset() {}
+
 bool GameMap::hasPossibleMove() {
   // TODO: 死局检测算法（BFS 或 暴力模拟）
   // 模拟所有可能的交换，看是否能产生消除
