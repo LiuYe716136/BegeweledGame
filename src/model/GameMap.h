@@ -16,6 +16,8 @@ public:
    * 随机填充宝石，并保证初始状态下没有可直接消除的组合
    */
   void init();
+  int getCurrentScore() const { return m_currentScore; }
+  void setCurrentScore(int score) { m_currentScore = score; }
 
   // 核心数据
   Gem m_map[ROW][COL];
@@ -70,16 +72,17 @@ public:
    * @return
    */
   GemType getType(int r, int c) const;
-
+     void saveState();
 private:
   // 撤销功能辅助结构体
   struct Step {
     Gem mapSnapshot[ROW][COL]; // 地图快照
     int scoreSnapshot;         // 分数快照
   };
+  int m_currentScore;
 
   std::stack<Step> m_historyStack; // 历史记录栈
-  void saveState();                // 保存当前状态到栈
+                // 保存当前状态到栈
 };
 
 #endif // GAMEMAP_H

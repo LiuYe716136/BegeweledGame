@@ -171,8 +171,11 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
     }
     
     if (isAdjacent) {
-      // 尝试交换宝石
-      m_game->swap(selectedR, selectedC, r, c);
+        // 保存当前状态到历史栈
+        m_game->saveState();
+
+        // 尝试交换宝石
+        m_game->swap(selectedR, selectedC, r, c);
       
       // 检查交换后是否有匹配的宝石
       std::vector<QPoint> matches = m_game->checkMatches();
@@ -211,9 +214,12 @@ void GameWidget::on_btn_hint_clicked() {
 }
 
 void GameWidget::on_btn_undo_clicked() {
-  // TODO: 调用 m_game->undo()
-  // 如果成功，更新界面
-  // if (m_game->undo()) { update(); }
+    if (m_game->undo()) {
+        // 从 GameMap 恢复分数
+        m_score = m_game->getCurrentScore(); // 需要在 GameMap 中添加 getCurrentScore() 方法
+        ui->label_score->setText(QString::number(m_score));
+        update(); // 重绘界面
+    }
 }
 
 void GameWidget::updateGameState() {
@@ -247,6 +253,8 @@ void GameWidget::updateGameState() {
       m_timer->stop();
     }
   }
+  m_score += matches.size() * 10;
+  m_game->setCurrentScore(m_score);
   
   update(); // 每次状态更新都要重绘
 }

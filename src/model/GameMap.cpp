@@ -177,18 +177,6 @@ bool GameMap::hasPossibleMove() {
 // 拓展功能：撤销
 // ==========================================
 
-bool GameMap::undo() {
-  if (m_historyStack.empty()) {
-    return false;
-  }
-
-  // TODO: 取出栈顶元素
-  // Step step = m_historyStack.top();
-  // m_historyStack.pop();
-  // 将 step 中的数据恢复到当前 m_map
-
-  return true;
-}
 
 bool GameMap::isValid(int r, int c) const {
   // TODO: 判断坐标 (r, c) 是否在 [0, ROW) 和 [0, COL) 范围内
@@ -209,7 +197,37 @@ GemType GameMap::getType(int r, int c) const {
 // ==========================================
 
 void GameMap::saveState() {
-  // TODO: 创建 Step 对象
-  // 将当前 m_map 的内容和分数复制到 Step 中
-  // m_historyStack.push(step);
+    Step step;
+    // 保存地图快照
+    for (int r = 0; r < ROW; r++) {
+        for (int c = 0; c < COL; c++) {
+            step.mapSnapshot[r][c] = m_map[r][c];
+        }
+    }
+    // 保存分数快照
+    step.scoreSnapshot = m_currentScore;
+    m_historyStack.push(step);
+}
+
+// 实现撤销功能
+bool GameMap::undo() {
+    if (m_historyStack.empty()) {
+        return false; // 没有历史记录可撤销
+    }
+
+    // 取出栈顶元素并恢复状态
+    Step step = m_historyStack.top();
+    m_historyStack.pop();
+
+    // 恢复地图快照
+    for (int r = 0; r < ROW; r++) {
+        for (int c = 0; c < COL; c++) {
+            m_map[r][c] = step.mapSnapshot[r][c];
+        }
+    }
+
+    // 恢复分数（需要在 GameMap 中添加分数成员变量）
+    // m_currentScore = step.scoreSnapshot;
+
+    return true;
 }
