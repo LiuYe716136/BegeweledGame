@@ -1,18 +1,37 @@
 #include "GameMap.h"
+#include <cstdlib> // 用于 rand() 和 srand()
+#include <ctime>   // 用于 time()
 
 // ==========================================
 // 构造与初始化
 // ==========================================
 
 GameMap::GameMap() {
-  // 可以在这里做简单的成员变量初始化
+  // 初始化随机数生成器
+  srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 void GameMap::init() {
-  // TODO: 编写初始化逻辑
-  // 1. 双重循环遍历 m_map
-  // 2. 随机生成 GemType
-  // 3. 检查是否有生成时就直接消除的情况（如果有则重新生成）
+  // 初始化地图，随机生成宝石
+  for (int r = 0; r < ROW; r++) {
+    for (int c = 0; c < COL; c++) {
+      // 随机生成宝石类型（1-7，对应7种颜色）
+      int randomType = rand() % GEM_KIND + 1;
+      m_map[r][c].type = static_cast<GemType>(randomType);
+      m_map[r][c].isMatched = false;
+    }
+  }
+  
+  // 检查初始生成是否有可消除的组合，如果有则重新生成
+  while (!checkMatches().empty()) {
+    for (int r = 0; r < ROW; r++) {
+      for (int c = 0; c < COL; c++) {
+        int randomType = rand() % GEM_KIND + 1;
+        m_map[r][c].type = static_cast<GemType>(randomType);
+        m_map[r][c].isMatched = false;
+      }
+    }
+  }
 }
 
 // ==========================================
@@ -20,35 +39,133 @@ void GameMap::init() {
 // ==========================================
 
 void GameMap::swap(int r1, int c1, int r2, int c2) {
-  // TODO: 交换 m_map[r1][c1] 和 m_map[r2][c2] 的数据
-  // 注意：如果有选中状态等属性，也要一并处理
+  // 检查坐标是否有效
+  if (!isValid(r1, c1) || !isValid(r2, c2)) {
+    return;
+  }
+  
+  // 交换两个宝石的位置
+  Gem temp = m_map[r1][c1];
+  m_map[r1][c1] = m_map[r2][c2];
+  m_map[r2][c2] = temp;
 }
 
 std::vector<QPoint> GameMap::checkMatches() {
   std::vector<QPoint> matches;
+  
+  // 标记已经匹配的位置，避免重复计算
+  bool visited[ROW][COL] = {false};
 
-  // TODO: 编写消除检测算法
   // 1. 横向检测：连续3个及以上相同
+  for (int r = 0; r < ROW; r++) {
+    int count = 1;
+    for (int c = 1; c < COL; c++) {
+      if (m_map[r][c].type != EMPTY && m_map[r][c].type == m_map[r][c-1].type) {
+        count++;
+      } else {
+        if (count >= 3) {
+          // 标记连续匹配的宝石
+          for (int i = c - count; i < c; i++) {
+            if (!visited[r][i]) {
+              visited[r][i] = true;
+              matches.push_back(QPoint(i, r));
+            }
+          }
+        }
+        count = 1;
+      }
+    }
+    // 检查行末是否有匹配
+    if (count >= 3) {
+      for (int i = COL - count; i < COL; i++) {
+        if (!visited[r][i]) {
+          visited[r][i] = true;
+          matches.push_back(QPoint(i, r));
+        }
+      }
+    }
+  }
+
   // 2. 纵向检测：连续3个及以上相同
-  // 3. 将符合条件的坐标 push_back 到 matches 中
-  // 4. 注意去重（如果横竖交叉的情况）
+  for (int c = 0; c < COL; c++) {
+    int count = 1;
+    for (int r = 1; r < ROW; r++) {
+      if (m_map[r][c].type != EMPTY && m_map[r][c].type == m_map[r-1][c].type) {
+        count++;
+      } else {
+        if (count >= 3) {
+          // 标记连续匹配的宝石
+          for (int i = r - count; i < r; i++) {
+            if (!visited[i][c]) {
+              visited[i][c] = true;
+              matches.push_back(QPoint(c, i));
+            }
+          }
+        }
+        count = 1;
+      }
+    }
+    // 检查列末是否有匹配
+    if (count >= 3) {
+      for (int i = ROW - count; i < ROW; i++) {
+        if (!visited[i][c]) {
+          visited[i][c] = true;
+          matches.push_back(QPoint(c, i));
+        }
+      }
+    }
+  }
 
   return matches;
 }
 
 void GameMap::eliminate(const std::vector<QPoint> &points) {
-  // TODO: 遍历 points
-  // 将 m_map 对应位置的 GemType 设置为 EMPTY 或消除状态
+  // 遍历所有匹配的宝石位置
+  for (const auto &point : points) {
+    int r = point.y();
+    int c = point.x();
+    
+    // 检查位置是否有效
+    if (isValid(r, c)) {
+      // 将宝石类型设置为空
+      m_map[r][c].type = EMPTY;
+      m_map[r][c].isMatched = true; // 标记为已匹配
+    }
+  }
 }
 
 void GameMap::applyGravity() {
-  // TODO: 编写下落算法
   // 1. 从下往上、从左往右遍历
-  // 2. 如果遇到空位，让上方的宝石掉下来
-  // 3. 顶部的空位随机生成新宝石
+  for (int c = 0; c < COL; c++) {
+    int emptyCount = 0;
+    
+    // 从底部开始往上遍历
+    for (int r = ROW - 1; r >= 0; r--) {
+      if (m_map[r][c].type == EMPTY) {
+        // 遇到空位，计数加1
+        emptyCount++;
+      } else if (emptyCount > 0) {
+        // 遇到非空位且下方有空位，将宝石移动到下方
+        m_map[r + emptyCount][c] = m_map[r][c];
+        m_map[r][c].type = EMPTY;
+        m_map[r][c].isMatched = false;
+      }
+    }
+    
+    // 3. 顶部的空位随机生成新宝石
+    for (int r = 0; r < emptyCount; r++) {
+      int randomType = rand() % GEM_KIND + 1;
+      m_map[r][c].type = static_cast<GemType>(randomType);
+      m_map[r][c].isMatched = false;
+    }
+  }
 }
 
-bool GameMap::reset() {}
+bool GameMap::reset() {
+  // 重置地图，重新生成宝石
+  init();
+  return true;
+}
 
 bool GameMap::hasPossibleMove() {
   // TODO: 死局检测算法（BFS 或 暴力模拟）
@@ -80,12 +197,11 @@ bool GameMap::isValid(int r, int c) const {
 
 GemType GameMap::getType(int r, int c) const {
   if (!isValid(r, c)) {
-    // 如果越界，返回一个默认值或空值
-    return (GemType)0;
+    // 如果越界，返回空值
+    return EMPTY;
   }
-  // 返回实际类型 (假设 Gem 类中有 type 成员或类似的获取方式)
-  // return m_map[r][c].type;
-  return (GemType)0; // 占位返回
+  // 返回实际类型
+  return m_map[r][c].type;
 }
 
 // ==========================================

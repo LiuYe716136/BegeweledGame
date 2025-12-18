@@ -1,20 +1,27 @@
 #include "GameWidget.h"
-#include "ui_widget.h" // 必须包含由 .ui 文件生成的头文件
+#include "ui_GameWidget.h" // 必须包含由 .ui 文件生成的头文件
 #include <QDebug>      // 用于调试输出
+#include <QFile>       // 用于检查文件
+#include <QFileInfo>   // 用于文件信息检查
+#include <QImage>      // 用于图片加载
 
 // ==========================================
 // 构造与析构
 // ==========================================
 
 GameWidget::GameWidget(QWidget *parent)
-    : QWidget(parent), ui(new Ui::Widget),
+    : QWidget(parent), ui(new Ui::GameWidget),
       m_game(new GameMap()) // 实例化游戏逻辑
       ,
       m_timer(new QTimer(this)) // 实例化定时器
       ,
       m_selectedPos(-1, -1) // 初始化为无效坐标
       ,
-      m_score(0) {
+      m_score(0),
+      m_state(IDLE), // 初始化为空闲状态
+      m_soundSwap(nullptr),
+      m_soundEliminate(nullptr),
+      m_soundClick(nullptr) { // 初始化音效指针为nullptr
   ui->setupUi(this);
 
   // 加载图片和音效资源
@@ -40,12 +47,78 @@ void GameWidget::paintEvent(QPaintEvent *event) {
   Q_UNUSED(event);
   QPainter painter(this);
 
-  // TODO: 绘制背景
-  // painter.drawPixmap(...);
-
-  // TODO: 绘制游戏区域 (遍历 m_game->m_map)
-  // 双重循环 check 每一个 Gem 的类型，计算坐标并绘制图片
-  // 如果是 m_selectedPos，可以画一个选中框
+  // 绘制游戏区域的宝石
+  // 获取游戏板的位置和大小
+  QRect boardRect = ui->frame_board->geometry();
+  int boardX = boardRect.x();
+  int boardY = boardRect.y();
+  int boardWidth = boardRect.width();
+  int boardHeight = boardRect.height();
+  
+  // 计算每个宝石的大小和偏移量
+  int gemSize = boardWidth / COL;
+  int offsetX = (boardWidth - gemSize * COL) / 2;
+  int offsetY = (boardHeight - gemSize * ROW) / 2;
+  
+  // 遍历地图，绘制所有宝石
+  for (int r = 0; r < ROW; r++) {
+    for (int c = 0; c < COL; c++) {
+      // 获取宝石类型
+      GemType gemType = m_game->getType(r, c);
+      
+      // 根据宝石类型获取图片路径
+      QString imagePath;
+      switch (gemType) {
+        case RED:
+          imagePath = ":/gems/assets/images/red.png";
+          break;
+        case ORANGE:
+          imagePath = ":/gems/assets/images/orange.png";
+          break;
+        case YELLOW:
+          imagePath = ":/gems/assets/images/yellow.png";
+          break;
+        case GREEN:
+          imagePath = ":/gems/assets/images/green.png";
+          break;
+        case WHITE:
+          imagePath = ":/gems/assets/images/white.png";
+          break;
+        case BLUE:
+          imagePath = ":/gems/assets/images/blue.png";
+          break;
+        case PURPLE:
+          imagePath = ":/gems/assets/images/purple.png";
+          break;
+        default:
+          continue; // 跳过空宝石
+      }
+      
+      // 加载并绘制宝石图片
+      QPixmap gemPixmap(imagePath);
+      if (!gemPixmap.isNull()) {
+        // 计算宝石的绘制位置
+        int x = boardX + offsetX + c * gemSize;
+        int y = boardY + offsetY + r * gemSize;
+        
+        // 绘制宝石（缩放到合适大小）
+        painter.drawPixmap(x, y, gemSize, gemSize, gemPixmap.scaled(gemSize, gemSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+      }
+    }
+  }
+  
+  // 如果有选中的宝石，绘制选中框
+  if (m_selectedPos.x() >= 0 && m_selectedPos.x() < COL && m_selectedPos.y() >= 0 && m_selectedPos.y() < ROW) {
+    int r = m_selectedPos.y();
+    int c = m_selectedPos.x();
+    int x = boardX + offsetX + c * gemSize;
+    int y = boardY + offsetY + r * gemSize;
+    
+    // 绘制选中框（黄色边框）
+    QPen pen(QColor(255, 215, 0), 3);
+    painter.setPen(pen);
+    painter.drawRect(x, y, gemSize, gemSize);
+  }
 }
 
 void GameWidget::mousePressEvent(QMouseEvent *event) {
@@ -59,10 +132,44 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
     return; // 点击在游戏区域外
   }
 
-  // TODO: 处理点击逻辑
-  // 1. 如果当前没有选中 (m_selectedPos == -1,-1) -> 选中当前 (r,c)
-  // 2. 如果已经选中了 -> 判断是否相邻 -> 尝试交换
-  // 3. 触发 repaint() 重绘界面
+  // 处理点击逻辑
+  if (m_selectedPos == QPoint(-1, -1)) {
+    // 1. 没有选中任何宝石，选中当前点击的宝石
+    m_selectedPos = QPoint(c, r);
+  } else {
+    // 2. 已经选中了一个宝石，检查是否点击了相邻的宝石
+    int selectedR = m_selectedPos.y();
+    int selectedC = m_selectedPos.x();
+    
+    // 检查是否相邻（上下左右）
+    bool isAdjacent = false;
+    if ((abs(r - selectedR) == 1 && c == selectedC) || (abs(c - selectedC) == 1 && r == selectedR)) {
+      isAdjacent = true;
+    }
+    
+    if (isAdjacent) {
+      // 尝试交换宝石
+      m_game->swap(selectedR, selectedC, r, c);
+      
+      // 检查交换后是否有匹配的宝石
+      std::vector<QPoint> matches = m_game->checkMatches();
+      
+      if (matches.empty()) {
+        // 如果没有匹配的宝石，交换回来
+        m_game->swap(r, c, selectedR, selectedC);
+      } else {
+        // 有匹配的宝石，更新游戏状态
+        // 这里会在updateGameState中处理消除、下落和生成新宝石的逻辑
+        m_timer->start(500); // 启动游戏状态更新定时器
+      }
+    }
+    
+    // 无论是否交换成功，都取消选中状态
+    m_selectedPos = QPoint(-1, -1);
+  }
+  
+  // 触发重绘界面
+  repaint();
 }
 
 // ==========================================
@@ -87,14 +194,37 @@ void GameWidget::on_btn_undo_clicked() {
 }
 
 void GameWidget::updateGameState() {
-  // 这是一个动画状态机，由 m_timer 触发
-
-  // TODO: 编写消除流程
-  // 1. 检查是否有消除项 m_game->checkMatches()
-  // 2. 如果有 -> 播放音效 -> m_game->eliminate() -> 增加分数
-  // 3. 如果无消除 -> m_game->applyGravity() (下落)
-  // 4. 如果静止且无消除 -> 停止定时器，等待玩家输入
-
+  // 1. 检查是否有匹配的宝石
+  std::vector<QPoint> matches = m_game->checkMatches();
+  
+  if (!matches.empty()) {
+    // 2. 有匹配的宝石，执行消除
+    m_game->eliminate(matches);
+    
+    // 3. 增加分数（每个匹配的宝石加10分）
+    m_score += matches.size() * 10;
+    
+    // 4. 更新UI分数显示
+    ui->label_score->setText(QString::number(m_score));
+    
+    // 5. 继续检查是否有新的匹配
+    m_timer->start(500);
+  } else {
+    // 6. 没有匹配的宝石，应用重力让宝石下落
+    m_game->applyGravity();
+    
+    // 7. 再次检查是否有新的匹配（下落可能产生新的匹配）
+    matches = m_game->checkMatches();
+    
+    if (!matches.empty()) {
+      // 有新的匹配，继续处理
+      m_timer->start(500);
+    } else {
+      // 8. 静止且无消除，停止定时器，等待玩家输入
+      m_timer->stop();
+    }
+  }
+  
   update(); // 每次状态更新都要重绘
 }
 
@@ -110,28 +240,114 @@ void GameWidget::initGame() {
   m_selectedPos = QPoint(-1, -1);
 
   // UI 更新
-  // ui->label_score->setText("0");
+  ui->label_score->setText("0");
 
   update();
 }
 
 void GameWidget::loadResources() {
-  // TODO: 加载图片资源到成员变量（如果有 pixmap 缓存）
-
-  // TODO: 初始化音效
-  // m_soundSwap = new QSoundEffect(this);
-  // m_soundSwap->setSource(QUrl::fromLocalFile(":/res/swap.wav"));
+  // 1. 检查资源路径是否存在
+  QFileInfo resourceInfo(":/bgs/assets/images/game_bg.jpg");
+  qDebug() << "资源文件存在吗？" << resourceInfo.exists();
+  qDebug() << "资源文件路径：" << ":/bgs/assets/images/game_bg.jpg";
+  
+  // 2. 尝试使用QPixmap加载
+  QPixmap backgroundPixmap;
+  bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/game_bg.jpg");
+  qDebug() << "QPixmap加载成功？" << loadSuccess;
+  qDebug() << "图片尺寸：" << backgroundPixmap.size();
+  
+  // 3. 尝试使用QImage加载
+  QImage backgroundImage;
+  bool imageLoadSuccess = backgroundImage.load(":/bgs/assets/images/game_bg.jpg");
+  qDebug() << "QImage加载成功？" << imageLoadSuccess;
+  qDebug() << "图片尺寸：" << backgroundImage.size();
+  
+  // 4. 尝试使用QFile直接读取
+  QFile resourceFile(":/bgs/assets/images/game_bg.jpg");
+  if (resourceFile.open(QIODevice::ReadOnly)) {
+    qDebug() << "QFile读取成功，文件大小：" << resourceFile.size() << " bytes";
+    resourceFile.close();
+  } else {
+    qDebug() << "QFile读取失败：" << resourceFile.errorString();
+  }
+  
+  // 5. 设置背景图片
+  if (loadSuccess) {
+    // 使用border-image代替background-image，确保能自适应窗口大小且完全覆盖
+    this->setStyleSheet(
+        "#GameWidget { "
+        "border-image: url(:/bgs/assets/images/game_bg.jpg) 0 0 0 0 stretch stretch; "
+        "background-color: #000000; "
+        "}"
+        "QLabel { "
+        "color: white; "
+        "font-family: 'Microsoft YaHei'; "
+        "font-weight: bold; "
+        "}"
+        "QPushButton { "
+        "background-color: rgba(255, 255, 255, 200); "
+        "border: 2px solid #8f8f91; "
+        "border-radius: 10px; "
+        "padding: 5px; "
+        "font-size: 16px; "
+        "color: #333; "
+        "font-weight: bold; "
+        "}"
+        "QPushButton:hover { "
+        "background-color: rgba(255, 255, 255, 240); "
+        "border-color: #ffffff; "
+        "}"
+        "QPushButton:pressed { "
+        "background-color: rgba(200, 200, 200, 200); "
+        "}"
+        "QFrame { "
+        "background-color: rgba(0, 0, 0, 0); "
+        "border: 2px solid rgba(255, 255, 255, 50); "
+        "border-radius: 5px; "
+        "}"
+        "QProgressBar { "
+        "border: 2px solid grey; "
+        "border-radius: 5px; "
+        "text-align: center; "
+        "background-color: rgba(0,0,0,150); "
+        "color: white; "
+        "}"
+        "QProgressBar::chunk { "
+        "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 180, 0, 255), stop:1 rgba(0, 255, 0, 255)); "
+        "border-radius: 3px; "
+        "}"
+    );
+    qDebug() << "背景图片设置完成！";
+  }
 }
 
 bool GameWidget::screenToRowCol(QPoint pt, int &r, int &c) {
-  // TODO: 根据界面布局计算
-  // 假设每个格子大小是 GEM_SIZE，起始偏移是 OFFSET_X, OFFSET_Y
-
-  // r = (pt.y() - OFFSET_Y) / GEM_SIZE;
-  // c = (pt.x() - OFFSET_X) / GEM_SIZE;
-
-  // 检查 r, c 是否在合法范围内
-  // if (r >= 0 && r < ROW && c >= 0 && c < COL) return true;
-
-  return false; // 默认返回 false
+  // 获取游戏板的位置和大小
+  QRect boardRect = ui->frame_board->geometry();
+  int boardX = boardRect.x();
+  int boardY = boardRect.y();
+  int boardWidth = boardRect.width();
+  int boardHeight = boardRect.height();
+  
+  // 检查点击是否在游戏板内
+  if (!boardRect.contains(pt)) {
+    return false;
+  }
+  
+  // 计算每个宝石的大小和偏移量
+  int gemSize = boardWidth / COL;
+  int offsetX = (boardWidth - gemSize * COL) / 2;
+  int offsetY = (boardHeight - gemSize * ROW) / 2;
+  
+  // 计算行列坐标
+  r = (pt.y() - boardY - offsetY) / gemSize;
+  c = (pt.x() - boardX - offsetX) / gemSize;
+  
+  // 检查行列坐标是否在合法范围内
+  if (r >= 0 && r < ROW && c >= 0 && c < COL) {
+    return true;
+  }
+  
+  return false;
 }

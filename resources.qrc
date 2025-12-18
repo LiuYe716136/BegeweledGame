@@ -5,18 +5,11 @@
     </qresource>
     <qresource prefix="/gems">
         <file>assets/images/blue.png</file>
-        <file>assets/images/blue_select.png</file>
         <file>assets/images/green.png</file>
-        <file>assets/images/green_select.png</file>
         <file>assets/images/orange.png</file>
-        <file>assets/images/orange_select.png</file>
         <file>assets/images/purple.png</file>
-        <file>assets/images/purple_select.png</file>
         <file>assets/images/red.png</file>
-        <file>assets/images/red_select.png</file>
         <file>assets/images/white.png</file>
-        <file>assets/images/white_select.png</file>
         <file>assets/images/yellow.png</file>
-        <file>assets/images/yellow_select.png</file>
     </qresource>
 </RCC>

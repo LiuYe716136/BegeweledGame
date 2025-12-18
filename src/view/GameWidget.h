@@ -5,13 +5,14 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QSoundEffect>
+#include <QString>
 #include <QTimer>
 #include <QWidget>
 
 // Qt 命名空间处理
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class Widget;
+class GameWidget;
 }
 QT_END_NAMESPACE
 
@@ -59,7 +60,7 @@ private:
   // ==========================================
   // 内部成员变量
   // ==========================================
-  Ui::Widget *ui;  // UI 指针
+  Ui::GameWidget *ui;  // UI 指针
   GameMap *m_game; // 游戏逻辑模型指针
   QTimer *m_timer; // 动画流程定时器
 
