@@ -32,7 +32,8 @@ protected:
    * @brief 绘图事件
    * 负责将 m_game->m_map 里的数据画成图片
    */
-  void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+
 
   /**
    * @brief 鼠标点击事件
