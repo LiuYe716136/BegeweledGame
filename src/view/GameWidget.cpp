@@ -145,62 +145,44 @@ void GameWidget::paintEvent(QPaintEvent *event) {
     }
 }
 void GameWidget::mousePressEvent(QMouseEvent *event) {
-  if (event->button() != Qt::LeftButton) {
-    return;
-  }
-
-  int r, c;
-  // 将屏幕坐标转换为矩阵行列
-  if (!screenToRowCol(event->pos(), r, c)) {
-    return; // 点击在游戏区域外
-  }
-
-  // 处理点击逻辑
-  if (m_selectedPos == QPoint(-1, -1)) {
-    // 1. 没有选中任何宝石，选中当前点击的宝石
-    m_selectedPos = QPoint(c, r);
-  } else {
-    // 2. 已经选中了一个宝石，检查是否点击了相邻的宝石
-    int selectedR = m_selectedPos.y();
-    int selectedC = m_selectedPos.x();
-    
-    // 检查是否相邻（上下左右）
-    bool isAdjacent = false;
-    if ((abs(r - selectedR) == 1 && c == selectedC) || (abs(c - selectedC) == 1 && r == selectedR)) {
-      isAdjacent = true;
+    if (event->button() != Qt::LeftButton) {
+        return;
     }
-    
-    if (isAdjacent) {
-        // 保存当前状态到历史栈
-        m_game->saveState();
 
-        // 尝试交换宝石
-        m_game->swap(selectedR, selectedC, r, c);
-      
-      // 检查交换后是否有匹配的宝石
-      std::vector<QPoint> matches = m_game->checkMatches();
-      
-      if (matches.empty()) {
-        // 如果没有匹配的宝石，交换回来
-        m_game->swap(r, c, selectedR, selectedC);
-      } else {
-        // 有匹配的宝石，更新游戏状态
-        // 这里会在updateGameState中处理消除、下落和生成新宝石的逻辑
-        m_timer->start(500); // 启动游戏状态更新定时器
-      }
+    int r, c;
+    if (!screenToRowCol(event->pos(), r, c)) {
+        return;
     }
-    
-    // 无论是否交换成功，都取消选中状态
-    m_selectedPos = QPoint(-1, -1);
-  }
-  
-  // 触发重绘界面
-  repaint();
+
+    if (m_selectedPos == QPoint(-1, -1)) {
+        m_selectedPos = QPoint(c, r);
+    } else {
+        int selectedR = m_selectedPos.y();
+        int selectedC = m_selectedPos.x();
+        bool isAdjacent = false;
+        if ((abs(r - selectedR) == 1 && c == selectedC) || (abs(c - selectedC) == 1 && r == selectedR)) {
+            isAdjacent = true;
+        }
+
+        if (isAdjacent) {
+            // 交换前保存当前状态和分数（核心修正）
+            m_game->saveState(m_score);
+            m_game->swap(selectedR, selectedC, r, c);
+
+            std::vector<QPoint> matches = m_game->checkMatches();
+
+            if (matches.empty()) {
+                // 无匹配时交换回来，并删除无效快照
+                m_game->swap(r, c, selectedR, selectedC);
+                m_game->popLastState(); // 关键：清除无效状态
+            } else {
+                m_timer->start(500);
+            }
+        }
+        m_selectedPos = QPoint(-1, -1);
+    }
+    repaint();
 }
-
-// ==========================================
-// 界面交互槽函数
-// ==========================================
 
 void GameWidget::on_btn_reset_clicked() {
   // 重置游戏
@@ -215,50 +197,33 @@ void GameWidget::on_btn_hint_clicked() {
 
 void GameWidget::on_btn_undo_clicked() {
     if (m_game->undo()) {
-        // 从 GameMap 恢复分数
-        m_score = m_game->getCurrentScore(); // 需要在 GameMap 中添加 getCurrentScore() 方法
+        // 从GameMap获取撤销前的分数并更新
+        m_score = m_game->getLastUndoScore();
         ui->label_score->setText(QString::number(m_score));
-        update(); // 重绘界面
+        update();
     }
 }
 
 void GameWidget::updateGameState() {
-  // 1. 检查是否有匹配的宝石
-  std::vector<QPoint> matches = m_game->checkMatches();
-  
-  if (!matches.empty()) {
-    // 2. 有匹配的宝石，执行消除
-    m_game->eliminate(matches);
-    
-    // 3. 增加分数（每个匹配的宝石加10分）
-    m_score += matches.size() * 10;
-    
-    // 4. 更新UI分数显示
-    ui->label_score->setText(QString::number(m_score));
-    
-    // 5. 继续检查是否有新的匹配
-    m_timer->start(500);
-  } else {
-    // 6. 没有匹配的宝石，应用重力让宝石下落
-    m_game->applyGravity();
-    
-    // 7. 再次检查是否有新的匹配（下落可能产生新的匹配）
-    matches = m_game->checkMatches();
-    
-    if (!matches.empty()) {
-      // 有新的匹配，继续处理
-      m_timer->start(500);
-    } else {
-      // 8. 静止且无消除，停止定时器，等待玩家输入
-      m_timer->stop();
-    }
-  }
-  m_score += matches.size() * 10;
-  m_game->setCurrentScore(m_score);
-  
-  update(); // 每次状态更新都要重绘
-}
+    std::vector<QPoint> matches = m_game->checkMatches();
 
+    if (!matches.empty()) {
+        m_game->eliminate(matches);
+        // 每次消除的分数 = 匹配数量 * 10（确保单次计算正确）
+        m_score += matches.size() * 10;
+        ui->label_score->setText(QString::number(m_score));
+        m_timer->start(500);
+    } else {
+        m_game->applyGravity();
+        matches = m_game->checkMatches();
+        if (!matches.empty()) {
+            m_timer->start(500);
+        } else {
+            m_timer->stop();
+        }
+    }
+    update();
+}
 // ==========================================
 // 内部辅助函数
 // ==========================================

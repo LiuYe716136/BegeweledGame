@@ -6,11 +6,9 @@
 // 构造与初始化
 // ==========================================
 
-GameMap::GameMap() {
-  // 初始化随机数生成器
-  srand(static_cast<unsigned int>(time(nullptr)));
+GameMap::GameMap() : m_lastUndoScore(0) {
+    srand(static_cast<unsigned int>(time(nullptr)));
 }
-
 void GameMap::init() {
   // 初始化地图，随机生成宝石
   for (int r = 0; r < ROW; r++) {
@@ -196,7 +194,7 @@ GemType GameMap::getType(int r, int c) const {
 // 内部辅助
 // ==========================================
 
-void GameMap::saveState() {
+void GameMap::saveState(int currentScore) {
     Step step;
     // 保存地图快照
     for (int r = 0; r < ROW; r++) {
@@ -204,30 +202,39 @@ void GameMap::saveState() {
             step.mapSnapshot[r][c] = m_map[r][c];
         }
     }
-    // 保存分数快照
-    step.scoreSnapshot = m_currentScore;
+    // 保存当前分数（交换前的分数）
+    step.scoreSnapshot = currentScore;
     m_historyStack.push(step);
 }
 
-// 实现撤销功能
+// 撤销操作（恢复地图和分数）
 bool GameMap::undo() {
     if (m_historyStack.empty()) {
-        return false; // 没有历史记录可撤销
+        return false;
     }
-
-    // 取出栈顶元素并恢复状态
     Step step = m_historyStack.top();
     m_historyStack.pop();
 
-    // 恢复地图快照
+    // 恢复地图
     for (int r = 0; r < ROW; r++) {
         for (int c = 0; c < COL; c++) {
             m_map[r][c] = step.mapSnapshot[r][c];
         }
     }
 
-    // 恢复分数（需要在 GameMap 中添加分数成员变量）
-    // m_currentScore = step.scoreSnapshot;
-
+    // 记录恢复的分数（供外部获取）
+    m_lastUndoScore = step.scoreSnapshot;
     return true;
+}
+
+// 获取最近撤销的分数
+int GameMap::getLastUndoScore() const {
+    return m_lastUndoScore;
+}
+
+// 删除栈顶无效状态
+void GameMap::popLastState() {
+    if (!m_historyStack.empty()) {
+        m_historyStack.pop();
+    }
 }
