@@ -44,83 +44,106 @@ GameWidget::~GameWidget() {
 // ==========================================
 
 void GameWidget::paintEvent(QPaintEvent *event) {
-  Q_UNUSED(event);
-  QPainter painter(this);
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform); // 抗锯齿，图片更清晰
 
-  // 绘制游戏区域的宝石
-  // 获取游戏板的位置和大小
-  QRect boardRect = ui->frame_board->geometry();
-  int boardX = boardRect.x();
-  int boardY = boardRect.y();
-  int boardWidth = boardRect.width();
-  int boardHeight = boardRect.height();
-  
-  // 计算每个宝石的大小和偏移量
-  int gemSize = boardWidth / COL;
-  int offsetX = (boardWidth - gemSize * COL) / 2;
-  int offsetY = (boardHeight - gemSize * ROW) / 2;
-  
-  // 遍历地图，绘制所有宝石
-  for (int r = 0; r < ROW; r++) {
-    for (int c = 0; c < COL; c++) {
-      // 获取宝石类型
-      GemType gemType = m_game->getType(r, c);
-      
-      // 根据宝石类型获取图片路径
-      QString imagePath;
-      switch (gemType) {
-        case RED:
-          imagePath = ":/gems/assets/images/red.png";
-          break;
-        case ORANGE:
-          imagePath = ":/gems/assets/images/orange.png";
-          break;
-        case YELLOW:
-          imagePath = ":/gems/assets/images/yellow.png";
-          break;
-        case GREEN:
-          imagePath = ":/gems/assets/images/green.png";
-          break;
-        case WHITE:
-          imagePath = ":/gems/assets/images/white.png";
-          break;
-        case BLUE:
-          imagePath = ":/gems/assets/images/blue.png";
-          break;
-        case PURPLE:
-          imagePath = ":/gems/assets/images/purple.png";
-          break;
-        default:
-          continue; // 跳过空宝石
-      }
-      
-      // 加载并绘制宝石图片
-      QPixmap gemPixmap(imagePath);
-      if (!gemPixmap.isNull()) {
-        // 计算宝石的绘制位置
+    // ========== 第一步：优先绘制背景图片（核心新增逻辑） ==========
+    QPixmap bgPixmap(":/bgs/assets/images/game_bg.jpg");
+    if (!bgPixmap.isNull()) {
+        // 绘制背景并适配窗口大小（铺满整个GameWidget）
+        painter.drawPixmap(this->rect(), bgPixmap.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    }
+
+    // ========== 原有宝石绘制逻辑（完全保留，仅调整顺序） ==========
+    // 获取游戏板的位置和大小
+    QRect boardRect = ui->frame_board->geometry();
+    int boardX = boardRect.x();
+    int boardY = boardRect.y();
+    int boardWidth = boardRect.width();
+    int boardHeight = boardRect.height();
+
+    // 计算每个宝石的大小和偏移量
+    int gemSize = boardWidth / COL;
+    int offsetX = (boardWidth - gemSize * COL) / 2;
+    int offsetY = (boardHeight - gemSize * ROW) / 2;
+
+    // 遍历地图，绘制所有宝石
+    for (int r = 0; r < ROW; r++) {
+        for (int c = 0; c < COL; c++) {
+            // 获取宝石类型
+            GemType gemType = m_game->getType(r, c);
+
+            // 根据宝石类型获取图片路径
+            QString imagePath;
+            switch (gemType) {
+            case RED:
+                imagePath = ":/gems/assets/images/red.png";
+                break;
+            case ORANGE:
+                imagePath = ":/gems/assets/images/orange.png";
+                break;
+            case YELLOW:
+                imagePath = ":/gems/assets/images/yellow.png";
+                break;
+            case GREEN:
+                imagePath = ":/gems/assets/images/green.png";
+                break;
+            case WHITE:
+                imagePath = ":/gems/assets/images/white.png";
+                break;
+            case BLUE:
+                imagePath = ":/gems/assets/images/blue.png";
+                break;
+            case PURPLE:
+                imagePath = ":/gems/assets/images/purple.png";
+                break;
+            default:
+                continue; // 跳过空宝石
+            }
+
+            // 加载并绘制宝石图片
+            QPixmap gemPixmap(imagePath);
+            if (!gemPixmap.isNull()) {
+                // 计算宝石的绘制位置
+                int x = boardX + offsetX + c * gemSize;
+                int y = boardY + offsetY + r * gemSize;
+
+                // 绘制宝石（缩放到合适大小）
+                painter.drawPixmap(x, y, gemSize, gemSize, gemPixmap.scaled(gemSize, gemSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }
+        }
+    }
+
+    // 如果有选中的宝石，绘制选中框
+    if (m_selectedPos.x() >= 0 && m_selectedPos.x() < COL && m_selectedPos.y() >= 0 && m_selectedPos.y() < ROW) {
+        int r = m_selectedPos.y();
+        int c = m_selectedPos.x();
         int x = boardX + offsetX + c * gemSize;
         int y = boardY + offsetY + r * gemSize;
-        
-        // 绘制宝石（缩放到合适大小）
-        painter.drawPixmap(x, y, gemSize, gemSize, gemPixmap.scaled(gemSize, gemSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-      }
-    }
-  }
-  
-  // 如果有选中的宝石，绘制选中框
-  if (m_selectedPos.x() >= 0 && m_selectedPos.x() < COL && m_selectedPos.y() >= 0 && m_selectedPos.y() < ROW) {
-    int r = m_selectedPos.y();
-    int c = m_selectedPos.x();
-    int x = boardX + offsetX + c * gemSize;
-    int y = boardY + offsetY + r * gemSize;
-    
-    // 绘制选中框（黄色边框）
-    QPen pen(QColor(255, 215, 0), 3);
-    painter.setPen(pen);
-    painter.drawRect(x, y, gemSize, gemSize);
-  }
-}
 
+        // 绘制选中框（黄色边框）
+        QPen pen(QColor(255, 215, 0), 3);
+        painter.setPen(pen);
+        painter.drawRect(x, y, gemSize, gemSize);
+    }
+
+    // ========== 第二步：修复label_score文字阴影（替代text-shadow） ==========
+    if (ui->label_score) {
+        // 1. 绘制阴影（黑色，右下偏移2px）
+        painter.save(); // 保存当前画家状态
+        painter.setPen(Qt::black);
+        painter.setFont(ui->label_score->font());
+        QRect shadowRect = ui->label_score->geometry().translated(2, 2);
+        painter.drawText(shadowRect, Qt::AlignCenter, ui->label_score->text());
+        painter.restore(); // 恢复状态
+
+        // 2. 绘制金色主文字
+        painter.setPen(QColor(255, 215, 0)); // 金色
+        painter.setFont(ui->label_score->font());
+        painter.drawText(ui->label_score->geometry(), Qt::AlignCenter, ui->label_score->text());
+    }
+}
 void GameWidget::mousePressEvent(QMouseEvent *event) {
   if (event->button() != Qt::LeftButton) {
     return;
