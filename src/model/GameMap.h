@@ -10,6 +10,11 @@ class GameMap {
 public:
   // 初始化
   GameMap();
+    // 获取宝石分值
+    int getGemScore(int r, int c) const {
+        if (!isValid(r, c)) return 0;
+        return GEM_SCORES[static_cast<int>(m_map[r][c].type)];
+    }
 
   /**
    * @brief 初始化地图

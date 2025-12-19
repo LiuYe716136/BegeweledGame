@@ -230,10 +230,21 @@ void GameWidget::updateGameState() {
     std::vector<QPoint> matches = m_game->checkMatches();
 
     if (!matches.empty()) {
+        // 1. 计算本次消除的总分（按宝石颜色累加分值）
+        int roundScore = 0;
+        for (const auto& point : matches) {
+            int r = point.y();   // QPoint的y对应行，x对应列
+            int c = point.x();
+            roundScore += m_game->getGemScore(r, c); // 调用获取对应颜色分值的方法
+        }
+
+        // 2. 执行消除操作
         m_game->eliminate(matches);
-        // 每次消除的分数 = 匹配数量 * 10（确保单次计算正确）
-        m_score += matches.size() * 10;
+
+        // 3. 更新总分数并刷新UI
+        m_score += roundScore;
         ui->label_score->setText(QString::number(m_score));
+
         m_timer->start(500);
     } else {
         m_game->applyGravity();
@@ -257,7 +268,6 @@ void GameWidget::updateGameState() {
     }
     update();
 }
-
 // 内部辅助函数
 
 void GameWidget::initGame() {
