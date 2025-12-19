@@ -15,6 +15,12 @@ public:
         if (!isValid(r, c)) return 0;
         return GEM_SCORES[static_cast<int>(m_map[r][c].type)];
     }
+    void clearHistory() {
+        while (!m_historyStack.empty()) {
+            m_historyStack.pop();
+        }
+        m_lastUndoScore = 0;
+    }
 
   /**
    * @brief 初始化地图

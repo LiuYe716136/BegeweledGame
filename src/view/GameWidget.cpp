@@ -272,6 +272,7 @@ void GameWidget::updateGameState() {
 
 void GameWidget::initGame() {
     // 初始化逻辑数据
+    m_game->clearHistory();
     m_game->init();
 
     m_score = 0;
