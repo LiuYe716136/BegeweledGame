@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QStyleOption>
+#include <QMessageBox>
 
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::GameWidget),
@@ -199,24 +200,35 @@ void GameWidget::on_btn_undo_clicked() {
 }
 
 void GameWidget::updateGameState() {
-  std::vector<QPoint> matches = m_game->checkMatches();
+    std::vector<QPoint> matches = m_game->checkMatches();
 
-  if (!matches.empty()) {
-    m_game->eliminate(matches);
-    // 每次消除的分数 = 匹配数量 * 10
-    m_score += matches.size() * 10;
-    ui->label_score->setText(QString::number(m_score));
-    m_timer->start(500);
-  } else {
-    m_game->applyGravity();
-    matches = m_game->checkMatches();
     if (!matches.empty()) {
-      m_timer->start(500);
+        m_game->eliminate(matches);
+        // 每次消除的分数 = 匹配数量 * 10（确保单次计算正确）
+        m_score += matches.size() * 10;
+        ui->label_score->setText(QString::number(m_score));
+        m_timer->start(500);
     } else {
-      m_timer->stop();
+        m_game->applyGravity();
+        matches = m_game->checkMatches();
+        if (!matches.empty()) {
+            m_timer->start(500);
+        } else {
+            // 下落完成后仍无匹配，检查是否为死局
+            if (!m_game->hasPossibleMove()) {
+                // 1. 显示死局提示对话框
+                QMessageBox::information(this, "游戏提示", "当前已死局，即将重置地图！分数将保留。");
+
+                // 2. 重置地图但不重置分数
+                m_game->reset();  // 仅重置地图宝石布局
+
+                // 3. 分数保持不变，无需修改m_score和label_score
+                qDebug() << "死局！已重置地图，分数保留";
+            }
+            m_timer->stop();
+        }
     }
-  }
-  update();
+    update();
 }
 
 // 内部辅助函数

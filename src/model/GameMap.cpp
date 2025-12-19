@@ -161,9 +161,53 @@ bool GameMap::reset() {
 }
 
 bool GameMap::hasPossibleMove() {
-  // TODO: 死局检测算法（BFS 或 暴力模拟）
-  // 模拟所有可能的交换，看是否能产生消除
-  return true; // 暂时返回 true 保证游戏能运行
+    // 遍历所有宝石，尝试交换每个宝石与其右侧、下方的相邻宝石
+    for (int r = 0; r < ROW; r++) {
+        for (int c = 0; c < COL; c++) {
+            // 尝试与右侧宝石交换
+            if (c + 1 < COL) {
+                // 保存原始状态
+                Gem temp = m_map[r][c];
+                m_map[r][c] = m_map[r][c+1];
+                m_map[r][c+1] = temp;
+
+                // 检查交换后是否有可消除组合
+                if (!checkMatches().empty()) {
+                    // 恢复原始状态
+                    m_map[r][c+1] = m_map[r][c];
+                    m_map[r][c] = temp;
+                    return true; // 存在有效交换
+                }
+
+                // 恢复原始状态
+                m_map[r][c+1] = m_map[r][c];
+                m_map[r][c] = temp;
+            }
+
+            // 尝试与下方宝石交换
+            if (r + 1 < ROW) {
+                // 保存原始状态
+                Gem temp = m_map[r][c];
+                m_map[r][c] = m_map[r+1][c];
+                m_map[r+1][c] = temp;
+
+                // 检查交换后是否有可消除组合
+                if (!checkMatches().empty()) {
+                    // 恢复原始状态
+                    m_map[r+1][c] = m_map[r][c];
+                    m_map[r][c] = temp;
+                    return true; // 存在有效交换
+                }
+
+                // 恢复原始状态
+                m_map[r+1][c] = m_map[r][c];
+                m_map[r][c] = temp;
+            }
+        }
+    }
+
+    // 所有交换都无法产生可消除组合，判定为死局
+    return false;
 }
 
 bool GameMap::isValid(int r, int c) const {
