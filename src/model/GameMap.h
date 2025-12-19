@@ -16,13 +16,16 @@ public:
    * 随机填充宝石，并保证初始状态下没有可直接消除的组合
    */
   void init();
+
   int getCurrentScore() const { return m_currentScore; }
+
   void setCurrentScore(int score) { m_currentScore = score; }
+
   int getLastStepScore() const {
-      if (!m_historyStack.empty()) {
-          return m_historyStack.top().scoreSnapshot;
-      }
-      return -1; // 表示无历史记录
+    if (!m_historyStack.empty()) {
+      return m_historyStack.top().scoreSnapshot;
+    }
+    return -1; // 表示无历史记录
   }
 
   // 核心数据
@@ -78,18 +81,20 @@ public:
    * @return
    */
   GemType getType(int r, int c) const;
-  void saveState(int currentScore);  // 保存当前状态（含分数）
-  int getLastUndoScore() const;      // 获取最近一次撤销的分数
-  void popLastState();               // 移除无效状态
+  void saveState(int currentScore); // 保存当前状态（含分数）
+  int getLastUndoScore() const;     // 获取最近一次撤销的分数
+  void popLastState();              // 移除无效状态
 private:
   struct Step {
     Gem mapSnapshot[ROW][COL]; // 地图快照
     int scoreSnapshot;         // 分数快照
   };
+
   int m_currentScore;
-   int m_lastUndoScore;
+  int m_lastUndoScore;
+
   std::stack<Step> m_historyStack; // 历史记录栈
-                // 保存当前状态到栈
+                                   // 保存当前状态到栈
 };
 
 #endif // GAMEMAP_H

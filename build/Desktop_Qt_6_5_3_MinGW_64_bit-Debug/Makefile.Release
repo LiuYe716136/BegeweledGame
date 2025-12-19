@@ -283,6 +283,7 @@ release/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
@@ -486,6 +487,7 @@ release/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
@@ -737,6 +739,7 @@ release/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h 
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
@@ -751,7 +754,7 @@ release/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h 
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
-		ui_widget.h \
+		ui_GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QVariant \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
@@ -775,7 +778,33 @@ release/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h 
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qinputmethod.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qlocale.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qguiapplication_platform.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QFrame \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qframe.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QHBoxLayout \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qboxlayout.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlayout.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlayoutitem.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qgridlayout.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QLabel \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlabel.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpicture.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtextdocument.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QProgressBar \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qprogressbar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QSpacerItem \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QVBoxLayout \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QFile \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfile.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfiledevice.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QFileInfo \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfileinfo.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatetime.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcalendar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/QImage
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\GameWidget.o ..\..\src\view\GameWidget.cpp
 
 release/qrc_resources.o: release/qrc_resources.cpp 

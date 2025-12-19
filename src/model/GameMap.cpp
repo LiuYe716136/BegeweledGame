@@ -2,13 +2,10 @@
 #include <cstdlib> // 用于 rand() 和 srand()
 #include <ctime>   // 用于 time()
 
-// ==========================================
-// 构造与初始化
-// ==========================================
-
 GameMap::GameMap() : m_lastUndoScore(0) {
-    srand(static_cast<unsigned int>(time(nullptr)));
+  srand(static_cast<unsigned int>(time(nullptr)));
 }
+
 void GameMap::init() {
   // 初始化地图，随机生成宝石
   for (int r = 0; r < ROW; r++) {
@@ -19,7 +16,7 @@ void GameMap::init() {
       m_map[r][c].isMatched = false;
     }
   }
-  
+
   // 检查初始生成是否有可消除的组合，如果有则重新生成
   while (!checkMatches().empty()) {
     for (int r = 0; r < ROW; r++) {
@@ -32,16 +29,12 @@ void GameMap::init() {
   }
 }
 
-// ==========================================
-// 公共接口
-// ==========================================
-
 void GameMap::swap(int r1, int c1, int r2, int c2) {
   // 检查坐标是否有效
   if (!isValid(r1, c1) || !isValid(r2, c2)) {
     return;
   }
-  
+
   // 交换两个宝石的位置
   Gem temp = m_map[r1][c1];
   m_map[r1][c1] = m_map[r2][c2];
@@ -50,7 +43,7 @@ void GameMap::swap(int r1, int c1, int r2, int c2) {
 
 std::vector<QPoint> GameMap::checkMatches() {
   std::vector<QPoint> matches;
-  
+
   // 标记已经匹配的位置，避免重复计算
   bool visited[ROW][COL] = {false};
 
@@ -58,7 +51,8 @@ std::vector<QPoint> GameMap::checkMatches() {
   for (int r = 0; r < ROW; r++) {
     int count = 1;
     for (int c = 1; c < COL; c++) {
-      if (m_map[r][c].type != EMPTY && m_map[r][c].type == m_map[r][c-1].type) {
+      if (m_map[r][c].type != EMPTY &&
+          m_map[r][c].type == m_map[r][c - 1].type) {
         count++;
       } else {
         if (count >= 3) {
@@ -88,7 +82,8 @@ std::vector<QPoint> GameMap::checkMatches() {
   for (int c = 0; c < COL; c++) {
     int count = 1;
     for (int r = 1; r < ROW; r++) {
-      if (m_map[r][c].type != EMPTY && m_map[r][c].type == m_map[r-1][c].type) {
+      if (m_map[r][c].type != EMPTY &&
+          m_map[r][c].type == m_map[r - 1][c].type) {
         count++;
       } else {
         if (count >= 3) {
@@ -122,7 +117,7 @@ void GameMap::eliminate(const std::vector<QPoint> &points) {
   for (const auto &point : points) {
     int r = point.y();
     int c = point.x();
-    
+
     // 检查位置是否有效
     if (isValid(r, c)) {
       // 将宝石类型设置为空
@@ -136,7 +131,7 @@ void GameMap::applyGravity() {
   // 1. 从下往上、从左往右遍历
   for (int c = 0; c < COL; c++) {
     int emptyCount = 0;
-    
+
     // 从底部开始往上遍历
     for (int r = ROW - 1; r >= 0; r--) {
       if (m_map[r][c].type == EMPTY) {
@@ -149,7 +144,7 @@ void GameMap::applyGravity() {
         m_map[r][c].isMatched = false;
       }
     }
-    
+
     // 3. 顶部的空位随机生成新宝石
     for (int r = 0; r < emptyCount; r++) {
       int randomType = rand() % GEM_KIND + 1;
@@ -171,11 +166,6 @@ bool GameMap::hasPossibleMove() {
   return true; // 暂时返回 true 保证游戏能运行
 }
 
-// ==========================================
-// 拓展功能：撤销
-// ==========================================
-
-
 bool GameMap::isValid(int r, int c) const {
   // TODO: 判断坐标 (r, c) 是否在 [0, ROW) 和 [0, COL) 范围内
   return (r >= 0 && r < ROW && c >= 0 && c < COL);
@@ -190,51 +180,45 @@ GemType GameMap::getType(int r, int c) const {
   return m_map[r][c].type;
 }
 
-// ==========================================
-// 内部辅助
-// ==========================================
-
 void GameMap::saveState(int currentScore) {
-    Step step;
-    // 保存地图快照
-    for (int r = 0; r < ROW; r++) {
-        for (int c = 0; c < COL; c++) {
-            step.mapSnapshot[r][c] = m_map[r][c];
-        }
+  Step step;
+  // 保存地图快照
+  for (int r = 0; r < ROW; r++) {
+    for (int c = 0; c < COL; c++) {
+      step.mapSnapshot[r][c] = m_map[r][c];
     }
-    // 保存当前分数（交换前的分数）
-    step.scoreSnapshot = currentScore;
-    m_historyStack.push(step);
+  }
+  // 保存当前分数（交换前的分数）
+  step.scoreSnapshot = currentScore;
+  m_historyStack.push(step);
 }
 
 // 撤销操作（恢复地图和分数）
 bool GameMap::undo() {
-    if (m_historyStack.empty()) {
-        return false;
-    }
-    Step step = m_historyStack.top();
-    m_historyStack.pop();
+  if (m_historyStack.empty()) {
+    return false;
+  }
+  Step step = m_historyStack.top();
+  m_historyStack.pop();
 
-    // 恢复地图
-    for (int r = 0; r < ROW; r++) {
-        for (int c = 0; c < COL; c++) {
-            m_map[r][c] = step.mapSnapshot[r][c];
-        }
+  // 恢复地图
+  for (int r = 0; r < ROW; r++) {
+    for (int c = 0; c < COL; c++) {
+      m_map[r][c] = step.mapSnapshot[r][c];
     }
+  }
 
-    // 记录恢复的分数（供外部获取）
-    m_lastUndoScore = step.scoreSnapshot;
-    return true;
+  // 记录恢复的分数（供外部获取）
+  m_lastUndoScore = step.scoreSnapshot;
+  return true;
 }
 
 // 获取最近撤销的分数
-int GameMap::getLastUndoScore() const {
-    return m_lastUndoScore;
-}
+int GameMap::getLastUndoScore() const { return m_lastUndoScore; }
 
 // 删除栈顶无效状态
 void GameMap::popLastState() {
-    if (!m_historyStack.empty()) {
-        m_historyStack.pop();
-    }
+  if (!m_historyStack.empty()) {
+    m_historyStack.pop();
+  }
 }
