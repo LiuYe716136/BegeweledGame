@@ -39,7 +39,7 @@ private slots:
   void on_btn_reset_clicked(); // 重置
   void on_btn_hint_clicked();  // 提示
   void on_btn_undo_clicked();  // 撤销
-
+  void updateTime();
   /**
    * @brief 游戏主循环 (核心)
    * 由定时器触发，处理 消除->下落->生成 的流程
@@ -65,6 +65,9 @@ private:
   // 辅助函数
   void initGame();      // 游戏初始化
   void loadResources(); // 加载资源
+  QTimer* m_timeTimer;       // 计时定时器
+  int m_remainingTime;       // 剩余时间（秒）
+  const int TOTAL_TIME = 120; // 总时间2分钟（120秒）
 
   /**
    * @brief 坐标转换：屏幕像素坐标 -> 数组行列坐标

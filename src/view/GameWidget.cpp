@@ -8,32 +8,55 @@
 
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::GameWidget),
-      m_game(new GameMap()) // 实例化游戏逻辑
-      ,
-      m_timer(new QTimer(this)) // 实例化定时器
-      ,
-      m_selectedPos(-1, -1) // 初始化为无效坐标
-      ,
-      m_score(0), m_state(IDLE), // 初始化为空闲状态
+    m_game(new GameMap()),
+    m_timer(new QTimer(this)),
+    m_timeTimer(new QTimer(this)),  // 初始化计时定时器
+    m_selectedPos(-1, -1),
+    m_state(IDLE),
+    m_score(0),
+    m_soundSwap(nullptr),
+    m_soundEliminate(nullptr),
+    m_soundClick(nullptr) {
+    ui->setupUi(this);
 
-      m_soundSwap(nullptr), m_soundEliminate(nullptr), m_soundClick(nullptr),
-      m_soundBg(nullptr) {
-  ui->setupUi(this);
+    // 加载资源和其他初始化...
+    loadResources();
+    initGame();
 
-  // 加载图片和音效资源
-  loadResources();
+    // 连接定时器信号
+    connect(m_timer, &QTimer::timeout, this, &GameWidget::updateGameState);
 
-  // 初始化游戏数据
-  initGame();
-
-  // 连接定时器信号 (核心循环)
-  connect(m_timer, &QTimer::timeout, this, &GameWidget::updateGameState);
+    // 初始化计时相关
+    m_remainingTime = TOTAL_TIME;
+    ui->progressBar_time->setRange(0, TOTAL_TIME);
+    ui->progressBar_time->setValue(TOTAL_TIME);
+    connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
+    // 设置进度条显示格式为 "剩余秒数s"（关键代码）
+    ui->progressBar_time->setFormat("%v s"); // %v 表示当前值，后面拼接 " s"
+    ui->progressBar_time->setRange(0, TOTAL_TIME); // 范围 0-120 秒
 }
-
 GameWidget::~GameWidget() {
   delete m_game;
   delete m_timer;
   delete ui;
+}
+void GameWidget::updateTime() {
+    m_remainingTime--;
+    ui->progressBar_time->setValue(m_remainingTime);
+
+    // 时间到，游戏结束
+    if (m_remainingTime <= 0) {
+        m_timeTimer->stop();
+        m_timer->stop();  // 停止游戏逻辑定时器
+        m_state = GAME_OVER;
+
+        // 显示游戏结束弹窗
+        QMessageBox::information(this, "游戏结束",
+                                 QString("时间已到！你的最终得分是：%1").arg(m_score));
+
+        // 重置游戏（分数归零，地图重置）
+        initGame();
+    }
 }
 
 void GameWidget::paintEvent(QPaintEvent *event) {
@@ -140,6 +163,10 @@ void GameWidget::paintEvent(QPaintEvent *event) {
 }
 
 void GameWidget::mousePressEvent(QMouseEvent *event) {
+    // 如果游戏结束则不响应点击
+    if (m_state == GAME_OVER) {
+        return;
+    }
   if (event->button() != Qt::LeftButton) {
     return;
   }
@@ -183,9 +210,9 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void GameWidget::on_btn_reset_clicked() {
-  // 重置游戏
-  initGame();
-  update();
+    m_timeTimer->stop();  // 先停止当前计时
+    initGame();           // 重新初始化游戏（会重新开始计时）
+    update();
 }
 
 void GameWidget::on_btn_hint_clicked() {}
@@ -234,16 +261,24 @@ void GameWidget::updateGameState() {
 // 内部辅助函数
 
 void GameWidget::initGame() {
-  // 初始化逻辑数据
-  m_game->init();
+    // 初始化逻辑数据
+    m_game->init();
 
-  m_score = 0;
-  m_selectedPos = QPoint(-1, -1);
+    m_score = 0;
+    m_selectedPos = QPoint(-1, -1);
+    m_state = IDLE;  // 重置游戏状态
 
-  // UI 更新
-  ui->label_score->setText("0");
+    // 重置计时
+    m_remainingTime = TOTAL_TIME;
+    ui->progressBar_time->setValue(TOTAL_TIME);
 
-  update();
+    // UI 更新
+    ui->label_score->setText("0");
+
+    // 开始计时
+    m_timeTimer->start(1000);  // 每秒触发一次
+
+    update();
 }
 
 void GameWidget::loadResources() {
