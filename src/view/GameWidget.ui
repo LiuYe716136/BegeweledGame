@@ -25,37 +25,6 @@
   <property name="windowTitle">
    <string>宝石迷阵 - Bejeweled</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">#GameWidget {
-        background-image: url(:/bgs/assets/images/game_bg.jpg);
-}
-
-QLabel {
-        color: white;
-        font-family: &quot;Microsoft YaHei&quot;;
-        font-weight: bold;
-}
-
-QPushButton {
-        background-color: rgba(255, 255, 255, 200);
-        border: 2px solid #8f8f91;
-        border-radius: 10px;
-        padding: 5px;
-        font-size: 16px;
-        color: #333;
-        font-weight: bold;
-}
-
-QPushButton:hover {
-        background-color: rgba(255, 255, 255, 240);
-        border-color: #ffffff;
-}
-
-QPushButton:pressed {
-        background-color: rgba(200, 200, 200, 200);
-        border-color: #555;
-}</string>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
    <property name="spacing">
     <number>20</number>

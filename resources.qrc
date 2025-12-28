@@ -12,4 +12,7 @@
         <file>assets/images/white.png</file>
         <file>assets/images/yellow.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>assets/sounds/Peter Hajba - Bejeweled 2 Theme.mp3</file>
+    </qresource>
 </RCC>

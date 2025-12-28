@@ -1,5 +1,6 @@
 #include "GameWidget.h"
 #include "ui_GameWidget.h"
+#include "RankingWidget.h"
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
@@ -11,12 +12,21 @@ GameWidget::GameWidget(QWidget *parent)
     m_game(new GameMap()),
     m_timer(new QTimer(this)),
     m_timeTimer(new QTimer(this)),  // 初始化计时定时器
+    m_soundSwap(nullptr),
+    m_soundEliminate(nullptr),
+    m_soundClick(nullptr),
     m_selectedPos(-1, -1),
     m_state(IDLE),
     m_score(0),
-    m_soundSwap(nullptr),
-    m_soundEliminate(nullptr),
-    m_soundClick(nullptr) {
+    m_gameMode(ENDLESS),
+    m_challengeLevel(1),
+    m_targetScore(1000),
+    m_bgMusicPlayer(nullptr),
+    m_musicEnabled(true),
+    m_rankingWidget(nullptr),
+    m_musicBtn(nullptr),
+    m_endGameBtn(nullptr),
+    m_isHinting(false) {
     ui->setupUi(this);
 
     // 加载资源和其他初始化...
@@ -27,35 +37,62 @@ GameWidget::GameWidget(QWidget *parent)
     connect(m_timer, &QTimer::timeout, this, &GameWidget::updateGameState);
 
     // 初始化计时相关
-    m_remainingTime = TOTAL_TIME;
-    ui->progressBar_time->setRange(0, TOTAL_TIME);
-    ui->progressBar_time->setValue(TOTAL_TIME);
+    m_remainingTime = 120;
+    ui->progressBar_time->setRange(0, 120);
+    ui->progressBar_time->setValue(120);
     connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
     // 设置进度条显示格式为 "剩余秒数s"（关键代码）
     ui->progressBar_time->setFormat("%v s"); // %v 表示当前值，后面拼接 " s"
-    ui->progressBar_time->setRange(0, TOTAL_TIME); // 范围 0-120 秒
+    ui->progressBar_time->setRange(0, 120); // 范围 0-120 秒
 }
 GameWidget::~GameWidget() {
   delete m_game;
   delete m_timer;
+  delete m_timeTimer;
+  delete m_soundSwap;
+  delete m_soundEliminate;
+  delete m_soundClick;
   delete ui;
 }
 void GameWidget::updateTime() {
+    if (m_gameMode != CHALLENGE) {
+        return;
+    }
+    
     m_remainingTime--;
     ui->progressBar_time->setValue(m_remainingTime);
 
-    // 时间到，游戏结束
+    if (m_score >= m_targetScore) {
+        int completedLevel = m_challengeLevel;
+        int nextLevel = completedLevel + 1;
+        
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("关卡完成");
+        msgBox.setText(QString("恭喜！你完成了第%1关！\n进入第%2关！\n目标分数：%3").arg(completedLevel).arg(nextLevel).arg(getChallengeTargetScore(nextLevel)));
+        msgBox.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }");
+        msgBox.exec();
+        
+        m_challengeLevel = nextLevel;
+        m_targetScore = getChallengeTargetScore(nextLevel);
+        m_remainingTime = getChallengeTime(nextLevel);
+        ui->progressBar_time->setRange(0, m_remainingTime);
+        ui->progressBar_time->setValue(m_remainingTime);
+        return;
+    }
+
     if (m_remainingTime <= 0) {
         m_timeTimer->stop();
-        m_timer->stop();  // 停止游戏逻辑定时器
+        m_timer->stop();
         m_state = GAME_OVER;
 
-        // 显示游戏结束弹窗
-        QMessageBox::information(this, "游戏结束",
-                                 QString("时间已到！你的最终得分是：%1").arg(m_score));
-
-        // 重置游戏（分数归零，地图重置）
-        initGame();
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("游戏结束");
+        msgBox.setText(QString("时间已到！\n你完成了第%1关！\n最终得分是：%2").arg(m_challengeLevel).arg(m_score));
+        msgBox.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }");
+        msgBox.exec();
+        
+        emit gameOver(m_score, m_challengeLevel);
+        emit backToMenu();
     }
 }
 
@@ -144,6 +181,31 @@ void GameWidget::paintEvent(QPaintEvent *event) {
     painter.drawRect(x, y, GEM_SIZE, GEM_SIZE);
   }
 
+  // 如果有提示，绘制提示框（黄色虚线框）
+  if (m_isHinting && m_hintPos1 != QPoint(-1, -1) && m_hintPos2 != QPoint(-1, -1)) {
+      // 绘制第一个提示位置的框
+      int r1 = m_hintPos1.y();
+      int c1 = m_hintPos1.x();
+      int x1 = boardX + offsetX + c1 * GEM_SIZE;
+      int y1 = boardY + offsetY + r1 * GEM_SIZE;
+
+      QPen hintPen(QColor(255, 255, 0), 4, Qt::DashLine);
+      painter.setPen(hintPen);
+      painter.drawRect(x1, y1, GEM_SIZE, GEM_SIZE);
+
+      // 绘制第二个提示位置的框
+      int r2 = m_hintPos2.y();
+      int c2 = m_hintPos2.x();
+      int x2 = boardX + offsetX + c2 * GEM_SIZE;
+      int y2 = boardY + offsetY + r2 * GEM_SIZE;
+
+      painter.setPen(hintPen);
+      painter.drawRect(x2, y2, GEM_SIZE, GEM_SIZE);
+
+      // 在两个位置之间画一条连接线
+      painter.drawLine(x1 + GEM_SIZE / 2, y1 + GEM_SIZE / 2, x2 + GEM_SIZE / 2, y2 + GEM_SIZE / 2);
+  }
+
   // 绘画分数
   if (ui->label_score) {
     // 绘制阴影（黑色，右下偏移2px）
@@ -215,7 +277,63 @@ void GameWidget::on_btn_reset_clicked() {
     update();
 }
 
-void GameWidget::on_btn_hint_clicked() {}
+void GameWidget::on_btn_hint_clicked() {
+    findBestMove();
+    update();
+    QTimer::singleShot(3000, [this]() {
+        m_isHinting = false;
+        m_hintPos1 = QPoint(-1, -1);
+        m_hintPos2 = QPoint(-1, -1);
+        update();
+    });
+}
+
+void GameWidget::findBestMove() {
+    m_isHinting = false;
+    m_hintPos1 = QPoint(-1, -1);
+    m_hintPos2 = QPoint(-1, -1);
+    
+    int bestScore = 0;
+    
+    for (int r = 0; r < ROW; r++) {
+        for (int c = 0; c < COL; c++) {
+            const int dr[4] = {-1, 1, 0, 0};
+            const int dc[4] = {0, 0, -1, 1};
+            
+            for (int d = 0; d < 4; d++) {
+                int nr = r + dr[d];
+                int nc = c + dc[d];
+                
+                if (nr < 0 || nr >= ROW || nc < 0 || nc >= COL) continue;
+                
+                GemType type1 = m_game->getType(r, c);
+                GemType type2 = m_game->getType(nr, nc);
+                
+                if (type1 == type2) continue;
+                
+                m_game->swap(r, c, nr, nc);
+                
+                std::vector<QPoint> matches = m_game->checkMatches();
+                
+                int moveScore = 0;
+                for (const auto& match : matches) {
+                    int matchR = match.y();
+                    int matchC = match.x();
+                    moveScore += m_game->getGemScore(matchR, matchC);
+                }
+                
+                m_game->swap(r, c, nr, nc);
+                
+                if (moveScore > bestScore) {
+                    bestScore = moveScore;
+                    m_hintPos1 = QPoint(c, r);
+                    m_hintPos2 = QPoint(nc, nr);
+                    m_isHinting = true;
+                }
+            }
+        }
+    }
+}
 
 void GameWidget::on_btn_undo_clicked() {
   if (m_game->undo()) {
@@ -255,7 +373,11 @@ void GameWidget::updateGameState() {
             // 下落完成后仍无匹配，检查是否为死局
             if (!m_game->hasPossibleMove()) {
                 // 1. 显示死局提示对话框
-                QMessageBox::information(this, "游戏提示", "当前已死局，即将重置地图！分数将保留。");
+                QMessageBox msgBox;
+                msgBox.setWindowTitle("游戏提示");
+                msgBox.setText("当前已死局，即将重置地图！分数将保留。");
+                msgBox.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }");
+                msgBox.exec();
 
                 // 2. 重置地图但不重置分数
                 m_game->reset();  // 仅重置地图宝石布局
@@ -279,20 +401,33 @@ void GameWidget::initGame() {
     m_selectedPos = QPoint(-1, -1);
     m_state = IDLE;  // 重置游戏状态
 
-    // 重置计时
-    m_remainingTime = TOTAL_TIME;
-    ui->progressBar_time->setValue(TOTAL_TIME);
+    // 设置闯关模式的剩余时间（每关递减）
+    int totalTime = (m_gameMode == CHALLENGE) ? getChallengeTime(m_challengeLevel) : 0;
+    m_remainingTime = totalTime;
+    ui->progressBar_time->setRange(0, totalTime);
+    ui->progressBar_time->setValue(totalTime);
 
     // UI 更新
     ui->label_score->setText("0");
 
-    // 开始计时
-    m_timeTimer->start(1000);  // 每秒触发一次
+    // 开始计时 - 仅在闯关模式下
+    if (m_gameMode == CHALLENGE) {
+        m_timeTimer->start(1000);  // 每秒触发一次
+        ui->progressBar_time->setVisible(true);
+    } else {
+        m_timeTimer->stop();  // 无尽模式禁用计时
+        ui->progressBar_time->setVisible(false);
+    }
 
     update();
 }
 
 void GameWidget::loadResources() {
+  // 初始化音效变量
+  m_soundSwap = new QSoundEffect(this);
+  m_soundEliminate = new QSoundEffect(this);
+  m_soundClick = new QSoundEffect(this);
+  
   // 1. 检查资源路径是否存在
   QFileInfo resourceInfo(":/bgs/assets/images/game_bg.jpg");
   qDebug() << "资源文件存在吗？" << resourceInfo.exists();
@@ -369,6 +504,107 @@ void GameWidget::loadResources() {
         "}");
     qDebug() << "背景图片设置完成！";
   }
+  
+  // Create music control button
+  m_musicBtn = new QPushButton(this);
+  m_musicBtn->setGeometry(720, 20, 50, 50);
+  m_musicBtn->setText("♪");
+  m_musicBtn->setStyleSheet(
+      "QPushButton { "
+      "background-color: rgba(255, 215, 0, 150); "
+      "border: 2px solid gold; "
+      "border-radius: 25px; "
+      "font-size: 24px; "
+      "font-weight: bold; "
+      "color: #333; "
+      "}"
+      "QPushButton:hover { "
+      "background-color: rgba(255, 215, 0, 200); "
+      "}"
+      "QPushButton:pressed { "
+      "background-color: rgba(255, 215, 0, 100); "
+      "}"
+  );
+  
+  connect(m_musicBtn, &QPushButton::clicked, [this]() {
+      m_musicEnabled = !m_musicEnabled;
+      if (m_bgMusicPlayer) {
+          if (m_musicEnabled) {
+              m_bgMusicPlayer->play();
+              m_musicBtn->setText("♪");
+          } else {
+              m_bgMusicPlayer->pause();
+              m_musicBtn->setText("♪");
+          }
+      }
+  });
+  
+  // Create back button
+  QPushButton *btn_back = new QPushButton(this);
+  btn_back->setGeometry(20, 20, 100, 30);
+  btn_back->setText("返回菜单");
+  btn_back->setStyleSheet(
+      "QPushButton { "
+      "background-color: rgba(255, 255, 255, 150); "
+      "border: 2px solid #8f8f91; "
+      "border-radius: 10px; "
+      "padding: 5px; "
+      "font-size: 14px; "
+      "color: #333; "
+      "font-weight: bold; "
+      "}"
+      "QPushButton:hover { "
+      "background-color: rgba(255, 255, 255, 200); "
+      "border-color: #ffffff; "
+      "}"
+      "QPushButton:pressed { "
+      "background-color: rgba(200, 200, 200, 150); "
+      "}"
+  );
+  
+  connect(btn_back, &QPushButton::clicked, this, &GameWidget::backToMenu);
+  
+  QPushButton *btn_endGame = new QPushButton(this);
+  btn_endGame->setGeometry(660, 530, 120, 50);
+  btn_endGame->setText("结束游戏");
+  btn_endGame->setStyleSheet(
+      "QPushButton { "
+      "background-color: rgba(255, 100, 100, 150); "
+      "border: 2px solid red; "
+      "border-radius: 10px; "
+      "font-size: 14px; "
+      "font-weight: bold; "
+      "color: white; "
+      "}"
+      "QPushButton:hover { "
+      "background-color: rgba(255, 100, 100, 200); "
+      "}"
+      "QPushButton:pressed { "
+      "background-color: rgba(255, 100, 100, 100); "
+      "}"
+  );
+  
+  connect(btn_endGame, &QPushButton::clicked, [this]() {
+      m_timeTimer->stop();
+      m_timer->stop();
+      m_state = GAME_OVER;
+      
+      QMessageBox msgBox;
+      msgBox.setWindowTitle("游戏结束");
+      msgBox.setText(QString("你的得分是：%1").arg(m_score));
+      msgBox.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }");
+      msgBox.exec();
+      
+      emit gameOver(m_score, 1);
+      
+      emit backToMenu();
+  });
+  
+  // Hide end game button by default, will be shown in endless mode
+  btn_endGame->hide();
+  
+  // Store reference to end game button
+  m_endGameBtn = btn_endGame;
 }
 
 bool GameWidget::screenToRowCol(QPoint pt, int &r, int &c) {
@@ -398,4 +634,53 @@ bool GameWidget::screenToRowCol(QPoint pt, int &r, int &c) {
   }
 
   return false;
+}
+
+void GameWidget::setGameMode(GameMode mode) {
+    m_gameMode = mode;
+    
+    m_challengeLevel = 1;
+    m_targetScore = getChallengeTargetScore(1);
+    
+    if (m_endGameBtn) {
+        m_endGameBtn->show();
+        m_endGameBtn->raise();
+    }
+    
+    initGame();
+}
+
+void GameWidget::setChallengeLevel(int level) {
+    m_challengeLevel = level;
+    m_targetScore = getChallengeTargetScore(level);
+}
+
+int GameWidget::getChallengeTime(int level) const {
+    int baseTime = 120;
+    int reduction = (level - 1) * 5;  // 每关减少5秒，允许更多关卡
+    int minTime = 30;
+    return qMax(baseTime - reduction, minTime);
+}
+
+int GameWidget::getChallengeTargetScore(int level) const {
+    if (level == 1) {
+        return 1000;
+    }
+    int baseScore = 1000;
+    int rangeWidth = 500 * (level - 1);
+    int randomIncrease = rand() % rangeWidth;
+    return baseScore + (level - 1) * 500 + randomIncrease;
+}
+
+GameWidget::GameMode GameWidget::gameMode() const {
+    return m_gameMode;
+}
+
+void GameWidget::setBgMusicPlayer(QMediaPlayer *player) {
+    m_bgMusicPlayer = player;
+    m_musicEnabled = true;
+}
+
+void GameWidget::updateRankingWidget(RankingWidget *rankingWidget) {
+    m_rankingWidget = rankingWidget;
 }
