@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QPixmap>
 #include <QDebug>
+#include <QPainter>
 
 MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MenuWidget),
     m_bgMusicPlayer(nullptr),
@@ -49,7 +50,7 @@ void MenuWidget::createMusicButton() {
         "background-color: rgba(255, 215, 0, 100); "
         "}"
     );
-    
+
     connect(m_musicBtn, &QPushButton::clicked, this, &MenuWidget::onMusicBtnClicked);
 }
 
@@ -65,14 +66,22 @@ void MenuWidget::onMusicBtnClicked() {
         }
     }
 }
+void MenuWidget::paintEvent(QPaintEvent *event) {
+    // 先调用父类方法确保正常绘制
+    QWidget::paintEvent(event);
 
+    // 绘制背景图
+    QPainter painter(this);
+    QPixmap bg(":/bgs/assets/images/login_bg.jpg");
+    if (!bg.isNull()) {
+        // 按窗口大小拉伸绘制
+        painter.drawPixmap(rect(), bg.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    }
+}
 void MenuWidget::loadBackground() {
     this->setObjectName("MenuWidget");
     this->setStyleSheet(
-        "#MenuWidget { "
-        "border-image: url(:/bgs/assets/images/login_bg.jpg) 0 0 0 0 stretch stretch; "
-        "background-color: #000000; "
-        "}"
+        // 仅保留子控件样式，删除 #MenuWidget 的背景设置
         "QLabel { "
         "color: white; "
         "font-family: 'Microsoft YaHei'; "
@@ -94,7 +103,7 @@ void MenuWidget::loadBackground() {
         "QPushButton:pressed { "
         "background-color: rgba(200, 200, 200, 200); "
         "}"
-    );
+        );
 }
 
 void MenuWidget::on_btn_endless_clicked() {

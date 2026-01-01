@@ -17,6 +17,7 @@ class MenuWidget : public QWidget {
 public:
     explicit MenuWidget(QWidget *parent = nullptr);
     ~MenuWidget();
+    void paintEvent(QPaintEvent *event) override;
 
     void setBgMusicPlayer(QMediaPlayer *player);
 
@@ -34,8 +35,7 @@ private slots:
 private:
     Ui::MenuWidget *ui;
     void loadBackground();
-    void createMusicButton();
-
+    void createMusicButton(); 
     QMediaPlayer *m_bgMusicPlayer;
     QPushButton *m_musicBtn;
     bool m_musicEnabled;
