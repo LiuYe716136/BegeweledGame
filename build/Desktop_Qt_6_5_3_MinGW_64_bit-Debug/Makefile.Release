@@ -16,7 +16,7 @@ CXX           = g++
 DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wall -Wextra -Wextra $(DEFINES)
 CXXFLAGS      = -fno-keep-inline-dllexport -O2 -Wall -Wextra -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I../../../BejeweledGame -I. -I../../src/model -I../../src/view -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -Irelease -I. -I/include -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ 
+INCPATH       = -I../../../BegeweledGame -I. -I../../src/model -I../../src/view -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -Irelease -I. -I/include -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
 LIBS        =        D:\Qt\6.5.3\mingw_64\lib\libQt6Multimedia.a D:\Qt\6.5.3\mingw_64\lib\libQt6Widgets.a D:\Qt\6.5.3\mingw_64\lib\libQt6Gui.a D:\Qt\6.5.3\mingw_64\lib\libQt6Network.a D:\Qt\6.5.3\mingw_64\lib\libQt6Core.a -lmingw32 D:\Qt\6.5.3\mingw_64\lib\libQt6EntryPoint.a -lshell32  
@@ -319,7 +319,7 @@ release/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		release/moc_predefs.h \
 		D:/Qt/6.5.3/mingw_64/bin/moc.exe
-	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BejeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\GameWidget.h -o release\moc_GameWidget.cpp
+	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BegeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\GameWidget.h -o release\moc_GameWidget.cpp
 
 release/moc_MenuWidget.cpp: ../../src/view/MenuWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QWidget \
@@ -492,7 +492,7 @@ release/moc_MenuWidget.cpp: ../../src/view/MenuWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		release/moc_predefs.h \
 		D:/Qt/6.5.3/mingw_64/bin/moc.exe
-	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BejeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\MenuWidget.h -o release\moc_MenuWidget.cpp
+	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BegeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\MenuWidget.h -o release\moc_MenuWidget.cpp
 
 release/moc_RankingWidget.cpp: ../../src/view/RankingWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QWidget \
@@ -654,7 +654,7 @@ release/moc_RankingWidget.cpp: ../../src/view/RankingWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qnativeinterface.h \
 		release/moc_predefs.h \
 		D:/Qt/6.5.3/mingw_64/bin/moc.exe
-	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BejeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BejeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\RankingWidget.h -o release\moc_RankingWidget.cpp
+	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BegeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\RankingWidget.h -o release\moc_RankingWidget.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1373,13 +1373,40 @@ release/MenuWidget.o: ../../src/view/MenuWidget.cpp ../../src/view/MenuWidget.h 
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		ui_MenuWidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QVariant \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qeventloop.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreapplication_platform.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfuture.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfutureinterface.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qmutex.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qtsan_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qresultstore.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfuture_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qthreadpool.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qthread.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qdeadlinetimer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qelapsedtimer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qrunnable.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qexception.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qpromise.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qguiapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qinputmethod.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qlocale.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qguiapplication_platform.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QLabel \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlabel.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qframe.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpicture.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtextdocument.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QFileInfo \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfileinfo.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfile.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfiledevice.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatetime.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcalendar.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qlocale.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/QPixmap \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/QPainter \
@@ -1547,6 +1574,56 @@ release/RankingWidget.o: ../../src/view/RankingWidget.cpp ../../src/view/Ranking
 		D:/Qt/6.5.3/mingw_64/include/QtGui/QTransform \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qnativeinterface.h \
 		ui_RankingWidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QVariant \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qeventloop.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreapplication_platform.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfuture.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfutureinterface.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qmutex.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qtsan_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qresultstore.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qfuture_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qthreadpool.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qthread.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qdeadlinetimer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qelapsedtimer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qrunnable.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qexception.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qpromise.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qguiapplication.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qinputmethod.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qlocale.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qguiapplication_platform.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QLabel \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlabel.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qframe.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpicture.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtextdocument.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QListWidget \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlistwidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qlistview.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractitemview.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qabstractitemmodel.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qitemselectionmodel.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qstyleoption.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractspinbox.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qvalidator.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qregularexpression.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qslider.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractslider.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qstyle.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabbar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabwidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qrubberband.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QTabWidget \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QFile \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfile.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfiledevice.h \
