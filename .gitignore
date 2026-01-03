@@ -1,30 +1,157 @@
-# --- Qt Creator 配置文件 (绝对不能上传) ---
+# ========== Qt Creator 配置文件 ==========
 *.pro.user
 *.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.creator
+*.creator.user
+*.creator.user.*
+*.config
+*.files
+*.includes
 
-# --- 编译产生的临时文件夹 ---
+# ========== 编译目录 ==========
 build/
+build-*/
 debug/
 release/
+$$DESTDIR/
 bin/
+obj/
 x64/
+x86/
 
-# --- 编译产生的中间文件 ---
+# ========== 编译中间文件 ==========
 Makefile*
+*.make
+*.mak
 *.qmake.stash
 *.o
 *.obj
-*.moc
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.res
+*.manifest
+*.rc
+*.o.d
+*.obj.d
 
-# --- Qt 自动生成的 C++ 代码 (ui_xxx.h, moc_xxx.cpp) ---
+# ========== Qt 自动生成文件 ==========
 ui_*.h
 moc_*.cpp
+moc_*.h
 qrc_*.cpp
+*.moc
+*.prl
 
-# --- 可执行程序 ---
+# ========== 可执行文件和库 ==========
 *.exe
 *.dll
+*.exe.manifest
+*.exe.intermediate.manifest
+*.so
+*.so.*
+*.dylib
+*.a
+*.lib
 
-# --- 其他系统垃圾 ---
+# ========== 系统和编辑器文件 ==========
 Thumbs.db
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# ========== IDE 配置文件 ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========== 测试和覆盖率文件 ==========
+*.gcda
+*.gcno
+*.gcov
+lcov/
+coverage/
+
+# ========== 日志和临时文件 ==========
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# ========== 本地化文件 ==========
+*.qm
+*.ts
+
+# ========== 环境和配置文件 ==========
+.env
+.env.local
+.env.*.local
+*.ini
+*.conf
+
+# ========== CMake 相关文件 ==========
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
+# ========== 资源文件 ==========
+# 注意：resources.qrc 本身需要提交，所以只忽略编译后的资源文件
+qrc_*.cpp
+
+# ========== 自定义构建文件 ==========
+*.custom
+*.user
+
+# ========== Windows 特定文件 ==========
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
+*.obj
+*.res
+*.manifest
+*.rc
+
+# ========== Linux 特定文件 ==========
+*.so
+*.so.*
+*.a
+*.o
+
+# ========== macOS 特定文件 ==========
+*.dylib
+*.framework/
+*.plist
+
+# ========== 代码分析工具文件 ==========
+*.clang-format
+*.clang-tidy
+*.cppcheck
+*.valgrind
+
+# ========== 文档生成文件 ==========
+*.chm
+*.qch
+*.qhc
+*.html
+*.pdf
+
+# ========== 版本控制忽略文件 ==========
+# 不要忽略 .gitignore 本身
