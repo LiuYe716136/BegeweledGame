@@ -1,11 +1,25 @@
 #include "RankingWidget.h"
 #include "ui_RankingWidget.h"
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QPixmap>
 #include <QStringList>
 #include <QTextStream>
+
+// 初始化文件路径常量
+const QString RankingWidget::ENDLESS_RANKING_FILE = "./datas/endless_ranking.txt";
+const QString RankingWidget::CHALLENGE_RANKING_FILE = "./datas/challenge_ranking.txt";
+
+// 创建目录的辅助函数
+void createDirectoryIfNotExists(const QString &filePath) {
+    QFileInfo fileInfo(filePath);
+    QDir dir(fileInfo.path());
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+}
 
 /**
  * @brief RankingWidget构造函数
@@ -79,7 +93,11 @@ void RankingWidget::loadRanking() {
  */
 void RankingWidget::loadEndlessRanking() {
   m_endlessRanking.clear();
-  QFile file("./datas/endless_ranking.txt");
+  
+  // 确保目录存在
+  createDirectoryIfNotExists(ENDLESS_RANKING_FILE);
+  
+  QFile file(ENDLESS_RANKING_FILE);
 
   if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     QTextStream in(&file);
@@ -112,7 +130,11 @@ void RankingWidget::loadEndlessRanking() {
  */
 void RankingWidget::loadChallengeRanking() {
   m_challengeRanking.clear();
-  QFile file("./datas/challenge_ranking.txt");
+  
+  // 确保目录存在
+  createDirectoryIfNotExists(CHALLENGE_RANKING_FILE);
+  
+  QFile file(CHALLENGE_RANKING_FILE);
 
   if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     QTextStream in(&file);
@@ -146,7 +168,10 @@ void RankingWidget::loadChallengeRanking() {
  * 将无尽模式的排名数据保存到文件中
  */
 void RankingWidget::saveEndlessRanking() {
-  QFile file("./datas/endless_ranking.txt");
+  // 确保目录存在
+  createDirectoryIfNotExists(ENDLESS_RANKING_FILE);
+  
+  QFile file(ENDLESS_RANKING_FILE);
 
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream out(&file);
@@ -162,7 +187,10 @@ void RankingWidget::saveEndlessRanking() {
  * 将挑战模式的排名数据保存到文件中
  */
 void RankingWidget::saveChallengeRanking() {
-  QFile file("./datas/challenge_ranking.txt");
+  // 确保目录存在
+  createDirectoryIfNotExists(CHALLENGE_RANKING_FILE);
+  
+  QFile file(CHALLENGE_RANKING_FILE);
 
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream out(&file);

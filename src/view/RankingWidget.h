@@ -29,6 +29,11 @@ class RankingWidget : public QWidget {
   Q_OBJECT
 
 public:
+  // 文件路径常量
+  static const QString ENDLESS_RANKING_FILE;  ///< 无尽模式排行榜文件路径
+  static const QString CHALLENGE_RANKING_FILE;  ///< 挑战模式排行榜文件路径
+
+public:
   /**
    * @brief 构造函数
    * @param parent 父窗口部件
