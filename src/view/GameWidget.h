@@ -128,7 +128,7 @@ private slots:
    * @brief 时间更新槽函数
    * 挑战模式下更新剩余时间
    */
-  void updateTime();
+  void updateTimeCount();
 
   /**
    * @brief 游戏主循环 (核心)
@@ -137,9 +137,10 @@ private slots:
   void updateGameState();
 
 private:
-  Ui::GameWidget *ui; ///< UI 指针
-  GameMap *m_game;    ///< 游戏逻辑模型指针
-  QTimer *m_timer;    ///< 动画流程定时器
+  Ui::GameWidget *ui;   ///< UI 指针
+  GameMap *m_game;      ///< 游戏逻辑模型指针
+  QTimer *m_stateTimer; ///< 动画流程定时器
+  QTimer *m_countTimer; ///< 计时定时器
 
   // 游戏状态
   QPoint m_selectedPos; ///< 当前选中宝石的数组行列坐标 (-1,-1 表示未选)
@@ -154,7 +155,6 @@ private:
 
   // 辅助函数
   void initGame();     ///< 游戏初始化
-  QTimer *m_timeTimer; ///< 计时定时器
   int m_remainingTime; ///< 剩余时间（秒）
 
   RankingWidget *m_rankingWidget; ///< 排行榜部件指针

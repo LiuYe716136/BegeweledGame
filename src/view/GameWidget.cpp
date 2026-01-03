@@ -1,5 +1,4 @@
 #include "GameWidget.h"
-#include "RankingWidget.h"
 #include "ui_GameWidget.h"
 #include <QDebug>
 #include <QFile>
@@ -14,12 +13,8 @@
  */
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::GameWidget), m_game(new GameMap()),
-      m_timer(new QTimer(this)),
-      m_timeTimer(new QTimer(this)), // 初始化计时定时器
-      // 音效变量 - 暂时未实现
-      // m_soundSwap(nullptr),
-      // m_soundEliminate(nullptr),
-      // m_soundClick(nullptr),
+      m_stateTimer(new QTimer(this)),
+      m_countTimer(new QTimer(this)), // 初始化计时定时器
       m_selectedPos(-1, -1), m_state(IDLE), m_score(0), m_gameMode(ENDLESS),
       m_challengeLevel(1), m_targetScore(1000), m_bgMusicPlayer(nullptr),
       m_musicEnabled(true), m_rankingWidget(nullptr), m_musicBtn(nullptr),
@@ -30,11 +25,11 @@ GameWidget::GameWidget(QWidget *parent)
   initGame();
 
   // 连接定时器信号
-  connect(m_timer, &QTimer::timeout, this, &GameWidget::updateGameState);
+  connect(m_stateTimer, &QTimer::timeout, this, &GameWidget::updateGameState);
 
   // 初始化计时相关
   ui->progressBar_time->setFormat("%v s"); // %v 表示当前值，后面拼接 " s"
-  connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
+  connect(m_countTimer, &QTimer::timeout, this, &GameWidget::updateTimeCount);
 }
 /**
  * @brief GameWidget析构函数
@@ -42,19 +37,15 @@ GameWidget::GameWidget(QWidget *parent)
  */
 GameWidget::~GameWidget() {
   delete m_game;
-  delete m_timer;
-  delete m_timeTimer;
-  // 删除音效变量 - 暂时未实现
-  // delete m_soundSwap;
-  // delete m_soundEliminate;
-  // delete m_soundClick;
+  delete m_stateTimer;
+  delete m_countTimer;
   delete ui;
 }
 /**
  * @brief 更新时间槽函数
  * 挑战模式下每秒更新剩余时间，处理关卡完成和时间耗尽逻辑
  */
-void GameWidget::updateTime() {
+void GameWidget::updateTimeCount() {
   if (m_gameMode != CHALLENGE) {
     return;
   }
@@ -79,14 +70,22 @@ void GameWidget::updateTime() {
     m_challengeLevel = nextLevel;
     m_targetScore = getChallengeTargetScore(nextLevel);
     m_remainingTime = getChallengeTime(nextLevel);
+
+    // 重置分数为0
+    m_score = 0;
+
+    // 更新UI显示
     ui->progressBar_time->setRange(0, m_remainingTime);
     ui->progressBar_time->setValue(m_remainingTime);
+    ui->label_score->setText(QString::number(m_score));
+    ui->label_tarScore->setText(
+        QString::number(m_targetScore)); // 更新目标分数显示
     return;
   }
 
   if (m_remainingTime <= 0) {
-    m_timeTimer->stop();
-    m_timer->stop();
+    m_countTimer->stop();
+    m_stateTimer->stop();
     m_state = GAME_OVER;
 
     QMessageBox msgBox;
@@ -202,7 +201,7 @@ void GameWidget::paintEvent(QPaintEvent *event) {
     int x1 = boardX + offsetX + c1 * GEM_SIZE;
     int y1 = boardY + offsetY + r1 * GEM_SIZE;
 
-    QPen hintPen(QColor(255, 255, 0), 4, Qt::DashLine);
+    QPen hintPen(QColor(255, 255, 0), 2, Qt::DashLine);
     painter.setPen(hintPen);
     painter.drawRect(x1, y1, GEM_SIZE, GEM_SIZE);
 
@@ -283,7 +282,7 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
         m_game->popLastState(); // 关键：清除无效状态
       } else {
         // 有匹配时开始消除流程
-        m_timer->start(500);
+        m_stateTimer->start(500);
       }
     }
     // 清除选中状态
@@ -298,8 +297,8 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
  * 停止当前计时并重新初始化游戏
  */
 void GameWidget::on_btn_reset_clicked() {
-  m_timeTimer->stop(); // 先停止当前计时
-  initGame();          // 重新初始化游戏（会重新开始计时）
+  m_countTimer->stop(); // 先停止当前计时
+  initGame();           // 重新初始化游戏（会重新开始计时）
   update();
 }
 
@@ -310,7 +309,7 @@ void GameWidget::on_btn_reset_clicked() {
 void GameWidget::on_btn_hint_clicked() {
   findBestMove();
   update();
-  QTimer::singleShot(3000, [this]() {
+  QTimer::singleShot(1000, [this]() {
     m_isHinting = false;
     m_hintPos1 = QPoint(-1, -1);
     m_hintPos2 = QPoint(-1, -1);
@@ -395,8 +394,8 @@ void GameWidget::on_btn_undo_clicked() {
  */
 void GameWidget::on_btn_endGame_clicked() {
   // 停止计时器
-  m_timeTimer->stop();
-  m_timer->stop();
+  m_countTimer->stop();
+  m_stateTimer->stop();
 
   // 弹出消息框显示最终得分
   QMessageBox msgBox;
@@ -437,12 +436,12 @@ void GameWidget::updateGameState() {
     // 2. 执行消除操作
     m_game->eliminate(matches);
 
-    // 3. 更新总分数并刷新UI
+    // 3. 更新分数并刷新UI
     m_score += roundScore;
     ui->label_score->setText(QString::number(m_score));
 
     // 继续下一个消除步骤
-    m_timer->start(500);
+    m_stateTimer->start(500);
   } else {
     // 无匹配时应用重力
     m_game->applyGravity();
@@ -450,7 +449,7 @@ void GameWidget::updateGameState() {
     matches = m_game->checkMatches();
     if (!matches.empty()) {
       // 有新匹配继续消除
-      m_timer->start(500);
+      m_stateTimer->start(500);
     } else {
       // 下落完成后仍无匹配，检查是否为死局
       if (!m_game->hasPossibleMove()) {
@@ -469,7 +468,7 @@ void GameWidget::updateGameState() {
         qDebug() << "死局！已重置地图，分数保留";
       }
       // 停止定时器
-      m_timer->stop();
+      m_stateTimer->stop();
     }
   }
   // 刷新界面
@@ -498,13 +497,22 @@ void GameWidget::initGame() {
   // UI 更新
   ui->label_score->setText("0");
 
+  // 更新目标分数显示
+  if (m_gameMode == CHALLENGE) {
+    ui->label_tarScore->setText(QString::number(m_targetScore));
+  }
+
   // 开始计时 - 仅在闯关模式下
   if (m_gameMode == CHALLENGE) {
-    m_timeTimer->start(1000); // 每秒触发一次
+    m_countTimer->start(1000); // 每秒触发一次
     ui->progressBar_time->setVisible(true);
+    ui->label_target->setVisible(true);
+    ui->label_tarScore->setVisible(true);
   } else {
-    m_timeTimer->stop(); // 无尽模式禁用计时
+    m_countTimer->stop(); // 无尽模式禁用计时
     ui->progressBar_time->setVisible(false);
+    ui->label_target->setVisible(false);
+    ui->label_tarScore->setVisible(false);
   }
 
   update();
@@ -574,8 +582,8 @@ void GameWidget::setChallengeLevel(int level) {
  * @return 关卡时间（秒），最低30秒
  */
 int GameWidget::getChallengeTime(int level) const {
-  int baseTime = 120;
-  int reduction = (level - 1) * 5; // 每关减少5秒，允许更多关卡
+  int baseTime = 90;
+  int reduction = (level - 1) * 10; // 每关减少10秒，允许更多关卡
   int minTime = 30;
   return qMax(baseTime - reduction, minTime);
 }
@@ -583,16 +591,11 @@ int GameWidget::getChallengeTime(int level) const {
 /**
  * @brief 获取挑战模式下的关卡目标分数
  * @param level 关卡数
- * @return 目标分数，每关递增且有随机波动
+ * @return 目标分数，每关线性递增500
  */
 int GameWidget::getChallengeTargetScore(int level) const {
-  if (level == 1) {
-    return 1000;
-  }
   int baseScore = 1000;
-  int rangeWidth = 500 * (level - 1);
-  int randomIncrease = rand() % rangeWidth;
-  return baseScore + (level - 1) * 500 + randomIncrease;
+  return baseScore + (level - 1) * 500;
 }
 
 /**

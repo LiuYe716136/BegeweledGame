@@ -183,8 +183,50 @@ QProgressBar::chunk {
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #FFD700; /* 金色字体 */
-text-shadow: 2px 2px 2px black;</string>
+        <string notr="true">color: #FFD700; /* 金色字体 */</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_target">
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>14</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>目标分数</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: white;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_tarScore">
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>26</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #FFD700; /* 金色字体 */</string>
        </property>
        <property name="text">
         <string>0</string>

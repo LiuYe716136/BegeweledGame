@@ -15,11 +15,15 @@
 RankingWidget::RankingWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::RankingWidget), m_musicEnabled(true) {
   ui->setupUi(this);
+
   this->setObjectName("RankingWidget");
+
   loadRanking();
   // 设置排行榜列表为不可选中
+
   ui->list_endless->setSelectionMode(QAbstractItemView::NoSelection);
   ui->list_challenge->setSelectionMode(QAbstractItemView::NoSelection);
+
   connect(ui->btn_music, &QPushButton::clicked, this,
           &RankingWidget::on_btn_music_clicked);
 }
@@ -75,7 +79,7 @@ void RankingWidget::loadRanking() {
  */
 void RankingWidget::loadEndlessRanking() {
   m_endlessRanking.clear();
-  QFile file("endless_ranking.txt");
+  QFile file("./datas/endless_ranking.txt");
 
   if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     QTextStream in(&file);
@@ -108,7 +112,7 @@ void RankingWidget::loadEndlessRanking() {
  */
 void RankingWidget::loadChallengeRanking() {
   m_challengeRanking.clear();
-  QFile file("challenge_ranking.txt");
+  QFile file("./datas/challenge_ranking.txt");
 
   if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     QTextStream in(&file);
@@ -142,7 +146,7 @@ void RankingWidget::loadChallengeRanking() {
  * 将无尽模式的排名数据保存到文件中
  */
 void RankingWidget::saveEndlessRanking() {
-  QFile file("endless_ranking.txt");
+  QFile file("./datas/endless_ranking.txt");
 
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream out(&file);
@@ -158,7 +162,7 @@ void RankingWidget::saveEndlessRanking() {
  * 将挑战模式的排名数据保存到文件中
  */
 void RankingWidget::saveChallengeRanking() {
-  QFile file("challenge_ranking.txt");
+  QFile file("./datas/challenge_ranking.txt");
 
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream out(&file);
