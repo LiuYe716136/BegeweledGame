@@ -17,8 +17,30 @@ RankingWidget::RankingWidget(QWidget *parent)
   ui->setupUi(this);
   this->setObjectName("RankingWidget");
   loadRanking();
+  // 设置排行榜列表为不可选中
+  ui->list_endless->setSelectionMode(QAbstractItemView::NoSelection);
+  ui->list_challenge->setSelectionMode(QAbstractItemView::NoSelection);
   connect(ui->btn_music, &QPushButton::clicked, this,
           &RankingWidget::on_btn_music_clicked);
+}
+
+/**
+ * @brief 重绘事件处理
+ * 绘制背景图片
+ * @param event 绘图事件
+ */
+void RankingWidget::paintEvent(QPaintEvent *event) {
+  // 先调用父类方法确保正常绘制
+  QWidget::paintEvent(event);
+
+  // 绘制背景图
+  QPainter painter(this);
+  QPixmap bg(":/bgs/assets/images/rank_bg.jpg");
+  if (!bg.isNull()) {
+    // 按窗口大小拉伸绘制
+    painter.drawPixmap(rect(), bg.scaled(size(), Qt::IgnoreAspectRatio,
+                                         Qt::SmoothTransformation));
+  }
 }
 
 /**
@@ -71,7 +93,6 @@ void RankingWidget::loadEndlessRanking() {
     file.close();
   }
 
-  // Sort by score (descending)
   for (size_t i = 0; i < m_endlessRanking.size(); i++) {
     for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
       if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
@@ -105,7 +126,6 @@ void RankingWidget::loadChallengeRanking() {
     file.close();
   }
 
-  // Sort by level (descending), then by score
   for (size_t i = 0; i < m_challengeRanking.size(); i++) {
     for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
       if (m_challengeRanking[i].level < m_challengeRanking[j].level ||
@@ -204,7 +224,6 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
   if (mode == "endless") {
     m_endlessRanking.push_back(newItem);
 
-    // Sort again
     for (size_t i = 0; i < m_endlessRanking.size(); i++) {
       for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
         if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
@@ -213,7 +232,7 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
       }
     }
 
-    // Keep only top 10
+    // 保留前十
     if (m_endlessRanking.size() > 10) {
       m_endlessRanking.resize(10);
     }
@@ -223,7 +242,6 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
   } else if (mode == "challenge") {
     m_challengeRanking.push_back(newItem);
 
-    // Sort again
     for (size_t i = 0; i < m_challengeRanking.size(); i++) {
       for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
         if (m_challengeRanking[i].level < m_challengeRanking[j].level ||
@@ -234,7 +252,7 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
       }
     }
 
-    // Keep only top 10
+    // 保留前十
     if (m_challengeRanking.size() > 10) {
       m_challengeRanking.resize(10);
     }

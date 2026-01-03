@@ -15,13 +15,42 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#RankingWidget { 
-   background-image: url(:/bgs/assets/images/menu_bg.jpg);
+background-image: url(:/bgs/assets/images/rank_bg.jpg);
+background-color: #000000; 
 }
 QLabel { color: white; font-family: 'Microsoft YaHei'; font-weight: bold; }
 QPushButton { background-color: rgba(255, 255, 255, 200); border: 2px solid #8f8f91; border-radius: 10px; padding: 5px; font-size: 16px; color: #333; font-weight: bold; }
 QPushButton:hover { background-color: rgba(255, 255, 255, 240); border-color: #ffffff; }
 QPushButton:pressed { background-color: rgba(200, 200, 200, 200); }
-QListWidget { background-color: rgba(0, 0, 0, 180); color: white; font-size: 16px; border: 2px solid gold; border-radius: 5px; }
+QListWidget { 
+  background-color: rgba(0, 0, 0, 180); 
+  color: white; 
+  font-family: 'Microsoft YaHei';
+  font-size: 16px; 
+  font-weight: bold; 
+  border: 2px solid gold; 
+  border-radius: 10px; 
+  padding: 10px;
+}
+
+QListWidget::item { 
+  height: 40px; 
+  padding: 5px; 
+  border-radius: 5px;
+}
+
+QListWidget::item:alternate { 
+  background-color: rgba(255, 255, 255, 10); 
+}
+
+QListWidget::item:hover { 
+  background-color: rgba(255, 215, 0, 50); 
+}
+
+QListWidget::item:selected { 
+  background-color: rgba(255, 215, 0, 100); 
+  color: #333;
+}
 QTabWidget { background-color: rgba(0, 0, 0, 0); }
 QTabBar::tab { background-color: rgba(255, 255, 255, 150); color: #333; font-size: 16px; font-weight: bold; padding: 10px; }
 QTabBar::tab:selected { background-color: rgba(255, 215, 0, 200); }</string>
@@ -95,6 +124,9 @@ QPushButton:pressed { background-color: rgba(255, 215, 0, 100); }</string>
        <height>300</height>
       </rect>
      </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_challenge">
@@ -109,6 +141,9 @@ QPushButton:pressed { background-color: rgba(255, 215, 0, 100); }</string>
        <width>580</width>
        <height>300</height>
       </rect>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
      </property>
     </widget>
    </widget>

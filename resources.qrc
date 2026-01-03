@@ -2,6 +2,7 @@
     <qresource prefix="/bgs">
         <file>assets/images/game_bg.jpg</file>
         <file>assets/images/menu_bg.jpg</file>
+        <file>assets/images/rank_bg.jpg</file>
     </qresource>
     <qresource prefix="/gems">
         <file>assets/images/blue.png</file>
