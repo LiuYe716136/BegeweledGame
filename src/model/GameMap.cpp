@@ -2,10 +2,18 @@
 #include <cstdlib> // 用于 rand() 和 srand()
 #include <ctime>   // 用于 time()
 
+/**
+ * @brief GameMap构造函数实现
+ * 初始化随机数种子和撤销分数
+ */
 GameMap::GameMap() : m_lastUndoScore(0) {
   srand(static_cast<unsigned int>(time(nullptr)));
 }
 
+/**
+ * @brief 初始化地图实现
+ * 随机填充宝石，并保证初始状态下没有可直接消除的组合
+ */
 void GameMap::init() {
   // 初始化地图，随机生成宝石
   for (int r = 0; r < ROW; r++) {
@@ -29,6 +37,14 @@ void GameMap::init() {
   }
 }
 
+/**
+ * @brief 交换两个宝石实现
+ * 在数据层面交换两个指定位置的宝石
+ * @param r1 第一个宝石的行坐标
+ * @param c1 第一个宝石的列坐标
+ * @param r2 第二个宝石的行坐标
+ * @param c2 第二个宝石的列坐标
+ */
 void GameMap::swap(int r1, int c1, int r2, int c2) {
   // 检查坐标是否有效
   if (!isValid(r1, c1) || !isValid(r2, c2)) {
@@ -41,6 +57,11 @@ void GameMap::swap(int r1, int c1, int r2, int c2) {
   m_map[r2][c2] = temp;
 }
 
+/**
+ * @brief 检查全图匹配实现
+ * 检测游戏地图中所有可以消除的宝石组合（横向或纵向连续3个及以上相同宝石）
+ * @return 返回所有需要消除的宝石坐标集合
+ */
 std::vector<QPoint> GameMap::checkMatches() {
   std::vector<QPoint> matches;
 
@@ -112,6 +133,11 @@ std::vector<QPoint> GameMap::checkMatches() {
   return matches;
 }
 
+/**
+ * @brief 执行消除实现
+ * 将指定坐标的宝石消除（设为EMPTY），并标记为已匹配
+ * @param points 需要消除的宝石坐标集合
+ */
 void GameMap::eliminate(const std::vector<QPoint> &points) {
   // 遍历所有匹配的宝石位置
   for (const auto &point : points) {
@@ -127,6 +153,10 @@ void GameMap::eliminate(const std::vector<QPoint> &points) {
   }
 }
 
+/**
+ * @brief 下落填充算法实现
+ * 处理消除宝石后的下落填充逻辑：让上方的宝石下落填补空缺，顶部生成随机新宝石
+ */
 void GameMap::applyGravity() {
   // 1. 从下往上、从左往右遍历
   for (int c = 0; c < COL; c++) {
@@ -154,12 +184,22 @@ void GameMap::applyGravity() {
   }
 }
 
+/**
+ * @brief 重置游戏实现
+ * 重新初始化地图，生成新的宝石布局
+ * @return true表示重置成功
+ */
 bool GameMap::reset() {
   // 重置地图，重新生成宝石
   init();
   return true;
 }
 
+/**
+ * @brief 死局检测实现
+ * 检查游戏中是否还有可能的有效移动（交换相邻宝石后能产生匹配）
+ * @return true表示还有可移动的宝石，false表示死局
+ */
 bool GameMap::hasPossibleMove() {
     // 遍历所有宝石，尝试交换每个宝石与其右侧、下方的相邻宝石
     for (int r = 0; r < ROW; r++) {
@@ -210,11 +250,24 @@ bool GameMap::hasPossibleMove() {
     return false;
 }
 
+/**
+ * @brief 检查坐标有效性实现
+ * 判断指定的坐标是否在游戏地图的有效范围内
+ * @param r 行坐标
+ * @param c 列坐标
+ * @return true表示坐标有效，false表示坐标无效
+ */
 bool GameMap::isValid(int r, int c) const {
-  // TODO: 判断坐标 (r, c) 是否在 [0, ROW) 和 [0, COL) 范围内
   return (r >= 0 && r < ROW && c >= 0 && c < COL);
 }
 
+/**
+ * @brief 获取宝石类型实现
+ * 返回指定位置的宝石类型，如果坐标无效则返回EMPTY
+ * @param r 行坐标
+ * @param c 列坐标
+ * @return 宝石类型
+ */
 GemType GameMap::getType(int r, int c) const {
   if (!isValid(r, c)) {
     // 如果越界，返回空值

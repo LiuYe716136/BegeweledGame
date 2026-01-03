@@ -6,21 +6,40 @@
 #include <stack>
 #include <vector>
 
+/**
+ * @brief 游戏地图类
+ * 负责管理游戏的核心数据和逻辑：地图初始化、宝石交换、匹配检测、消除、下落填充等
+ */
 class GameMap {
 public:
-  // 初始化
+  /**
+   * @brief 构造函数
+   * 初始化随机数种子和游戏分数
+   */
   GameMap();
-    // 获取宝石分值
-    int getGemScore(int r, int c) const {
-        if (!isValid(r, c)) return 0;
-        return GEM_SCORES[static_cast<int>(m_map[r][c].type)];
+
+  /**
+   * @brief 获取指定位置宝石的分值
+   * @param r 行坐标
+   * @param c 列坐标
+   * @return 宝石的分值，如果坐标无效返回0
+   */
+  int getGemScore(int r, int c) const {
+    if (!isValid(r, c))
+      return 0;
+    return GEM_SCORES[static_cast<int>(m_map[r][c].type)];
+  }
+
+  /**
+   * @brief 清除历史记录
+   * 清空撤销历史栈并重置撤销分数
+   */
+  void clearHistory() {
+    while (!m_historyStack.empty()) {
+      m_historyStack.pop();
     }
-    void clearHistory() {
-        while (!m_historyStack.empty()) {
-            m_historyStack.pop();
-        }
-        m_lastUndoScore = 0;
-    }
+    m_lastUndoScore = 0;
+  }
 
   /**
    * @brief 初始化地图
@@ -28,10 +47,22 @@ public:
    */
   void init();
 
+  /**
+   * @brief 获取当前游戏分数
+   * @return 当前游戏分数
+   */
   int getCurrentScore() const { return m_currentScore; }
 
+  /**
+   * @brief 设置当前游戏分数
+   * @param score 新的游戏分数
+   */
   void setCurrentScore(int score) { m_currentScore = score; }
 
+  /**
+   * @brief 获取上一步的分数
+   * @return 上一步的分数，如果没有历史记录返回-1
+   */
   int getLastStepScore() const {
     if (!m_historyStack.empty()) {
       return m_historyStack.top().scoreSnapshot;
@@ -40,7 +71,7 @@ public:
   }
 
   // 核心数据
-  Gem m_map[ROW][COL];
+  Gem m_map[ROW][COL]; ///< 游戏地图的二维数组
 
   // 公共接口
 
@@ -85,27 +116,50 @@ public:
    */
   bool undo();
 
-  // 获取当前选中是否有效
+  /**
+   * @brief 检查坐标是否有效
+   * @param r 行坐标
+   * @param c 列坐标
+   * @return true表示坐标在有效范围内
+   */
   bool isValid(int r, int c) const;
   /**
-   * @brief 获取宝石类型
-   * @return
+   * @brief 获取指定位置的宝石类型
+   * @param r 行坐标
+   * @param c 列坐标
+   * @return 宝石类型，如果坐标无效返回EMPTY
    */
   GemType getType(int r, int c) const;
-  void saveState(int currentScore); // 保存当前状态（含分数）
-  int getLastUndoScore() const;     // 获取最近一次撤销的分数
-  void popLastState();              // 移除无效状态
+  /**
+   * @brief 保存当前状态
+   * 将当前地图和分数保存到历史记录栈中，用于撤销操作
+   * @param currentScore 当前游戏分数
+   */
+  void saveState(int currentScore);
+  /**
+   * @brief 获取最近一次撤销的分数
+   * @return 最近一次撤销的分数
+   */
+  int getLastUndoScore() const;
+  /**
+   * @brief 移除最后一个状态
+   * 从历史记录栈中移除无效的状态
+   */
+  void popLastState();
 private:
+  /**
+   * @brief 游戏步骤结构体
+   * 用于保存游戏的历史状态，包括地图快照和分数快照
+   */
   struct Step {
-    Gem mapSnapshot[ROW][COL]; // 地图快照
-    int scoreSnapshot;         // 分数快照
+    Gem mapSnapshot[ROW][COL]; ///< 地图快照
+    int scoreSnapshot;         ///< 分数快照
   };
 
-  int m_currentScore;
-  int m_lastUndoScore;
+  int m_currentScore;         ///< 当前游戏分数
+  int m_lastUndoScore;        ///< 最近一次撤销的分数
 
-  std::stack<Step> m_historyStack; // 历史记录栈
-                                   // 保存当前状态到栈
+  std::stack<Step> m_historyStack; ///< 历史记录栈，保存游戏的历史状态
 };
 
 #endif // GAMEMAP_H

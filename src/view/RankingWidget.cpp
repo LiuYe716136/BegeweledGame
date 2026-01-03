@@ -6,16 +6,29 @@
 #include <QPixmap>
 #include <QDebug>
 
+/**
+ * @brief RankingWidget构造函数
+ * 初始化UI、加载背景图片和排行榜数据
+ * @param parent 父窗口部件
+ */
 RankingWidget::RankingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::RankingWidget) {
     ui->setupUi(this);
     loadBackground();
     loadRanking();
 }
 
+/**
+ * @brief RankingWidget析构函数
+ * 释放UI资源
+ */
 RankingWidget::~RankingWidget() {
     delete ui;
 }
 
+/**
+ * @brief 加载背景图片
+ * 设置排行榜界面的背景图片和样式
+ */
 void RankingWidget::loadBackground() {
     QPixmap backgroundPixmap;
     bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/login_bg.jpg");
@@ -71,6 +84,10 @@ void RankingWidget::loadBackground() {
     }
 }
 
+/**
+ * @brief 加载排行榜数据
+ * 加载并显示无尽模式和挑战模式的排行榜数据
+ */
 void RankingWidget::loadRanking() {
     loadEndlessRanking();
     loadChallengeRanking();
@@ -78,6 +95,10 @@ void RankingWidget::loadRanking() {
     displayChallengeRanking();
 }
 
+/**
+ * @brief 加载无尽模式排行榜
+ * 从文件中读取无尽模式的排名数据并按得分降序排序
+ */
 void RankingWidget::loadEndlessRanking() {
     m_endlessRanking.clear();
     QFile file("endless_ranking.txt");
@@ -108,6 +129,10 @@ void RankingWidget::loadEndlessRanking() {
     }
 }
 
+/**
+ * @brief 加载挑战模式排行榜
+ * 从文件中读取挑战模式的排名数据并按关卡和得分降序排序
+ */
 void RankingWidget::loadChallengeRanking() {
     m_challengeRanking.clear();
     QFile file("challenge_ranking.txt");
@@ -140,6 +165,10 @@ void RankingWidget::loadChallengeRanking() {
     }
 }
 
+/**
+ * @brief 保存无尽模式排行榜
+ * 将无尽模式的排名数据保存到文件中
+ */
 void RankingWidget::saveEndlessRanking() {
     QFile file("endless_ranking.txt");
     
@@ -152,6 +181,10 @@ void RankingWidget::saveEndlessRanking() {
     }
 }
 
+/**
+ * @brief 保存挑战模式排行榜
+ * 将挑战模式的排名数据保存到文件中
+ */
 void RankingWidget::saveChallengeRanking() {
     QFile file("challenge_ranking.txt");
     
@@ -164,6 +197,10 @@ void RankingWidget::saveChallengeRanking() {
     }
 }
 
+/**
+ * @brief 显示无尽模式排行榜
+ * 在界面上显示无尽模式的排名数据
+ */
 void RankingWidget::displayEndlessRanking() {
     ui->list_endless->clear();
     for (size_t i = 0; i < m_endlessRanking.size(); i++) {
@@ -177,6 +214,10 @@ void RankingWidget::displayEndlessRanking() {
     }
 }
 
+/**
+ * @brief 显示挑战模式排行榜
+ * 在界面上显示挑战模式的排名数据
+ */
 void RankingWidget::displayChallengeRanking() {
     ui->list_challenge->clear();
     for (size_t i = 0; i < m_challengeRanking.size(); i++) {
@@ -190,6 +231,13 @@ void RankingWidget::displayChallengeRanking() {
     }
 }
 
+/**
+ * @brief 更新排行榜
+ * 将新的游戏记录添加到对应模式的排行榜中并保存
+ * @param mode 游戏模式（"endless"/"challenge"）
+ * @param score 得分
+ * @param level 关卡数（仅挑战模式有效）
+ */
 void RankingWidget::updateRanking(const QString &mode, int score, int level) {
     RankingItem newItem;
     newItem.name = "玩家";
@@ -239,14 +287,26 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
     }
 }
 
+/**
+ * @brief 获取无尽模式排行榜
+ * @return 无尽模式排行榜数据
+ */
 std::vector<RankingItem> RankingWidget::getEndlessRanking() const {
     return m_endlessRanking;
 }
 
+/**
+ * @brief 获取挑战模式排行榜
+ * @return 挑战模式排行榜数据
+ */
 std::vector<RankingItem> RankingWidget::getChallengeRanking() const {
     return m_challengeRanking;
 }
 
+/**
+ * @brief 返回菜单按钮点击槽函数
+ * 发出返回菜单信号
+ */
 void RankingWidget::on_btn_back_clicked() {
     emit backToMenu();
 }

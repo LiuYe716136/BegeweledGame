@@ -5,6 +5,11 @@
 #include <QDebug>
 #include <QPainter>
 
+/**
+ * @brief MenuWidget构造函数
+ * 初始化UI、设置窗口属性、加载背景和创建音乐按钮
+ * @param parent 父窗口部件
+ */
 MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MenuWidget),
     m_bgMusicPlayer(nullptr),
     m_musicBtn(nullptr),
@@ -15,10 +20,19 @@ MenuWidget::MenuWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MenuWidget
     createMusicButton();
 }
 
+/**
+ * @brief MenuWidget析构函数
+ * 释放UI资源
+ */
 MenuWidget::~MenuWidget() {
     delete ui;
 }
 
+/**
+ * @brief 设置背景音乐播放器
+ * 配置背景音乐播放器并开始播放
+ * @param player 音乐播放器指针
+ */
 void MenuWidget::setBgMusicPlayer(QMediaPlayer *player) {
     m_bgMusicPlayer = player;
     m_musicEnabled = true;
@@ -30,6 +44,10 @@ void MenuWidget::setBgMusicPlayer(QMediaPlayer *player) {
     }
 }
 
+/**
+ * @brief 创建音乐控制按钮
+ * 初始化音乐按钮的位置、样式和信号槽连接
+ */
 void MenuWidget::createMusicButton() {
     m_musicBtn = new QPushButton(this);
     m_musicBtn->setGeometry(720, 20, 50, 50);
@@ -54,6 +72,10 @@ void MenuWidget::createMusicButton() {
     connect(m_musicBtn, &QPushButton::clicked, this, &MenuWidget::onMusicBtnClicked);
 }
 
+/**
+ * @brief 音乐按钮点击事件处理
+ * 切换音乐播放状态（播放/暂停）
+ */
 void MenuWidget::onMusicBtnClicked() {
     m_musicEnabled = !m_musicEnabled;
     if (m_bgMusicPlayer) {
@@ -66,6 +88,12 @@ void MenuWidget::onMusicBtnClicked() {
         }
     }
 }
+
+/**
+ * @brief 重绘事件处理
+ * 绘制背景图片
+ * @param event 绘图事件
+ */
 void MenuWidget::paintEvent(QPaintEvent *event) {
     // 先调用父类方法确保正常绘制
     QWidget::paintEvent(event);
@@ -78,6 +106,11 @@ void MenuWidget::paintEvent(QPaintEvent *event) {
         painter.drawPixmap(rect(), bg.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
 }
+
+/**
+ * @brief 加载背景样式
+ * 设置窗口和子控件的样式表
+ */
 void MenuWidget::loadBackground() {
     this->setObjectName("MenuWidget");
     this->setStyleSheet(
@@ -106,14 +139,26 @@ void MenuWidget::loadBackground() {
         );
 }
 
+/**
+ * @brief 无尽模式按钮点击事件
+ * 发送开始无尽模式的信号
+ */
 void MenuWidget::on_btn_endless_clicked() {
     emit startEndlessMode();
 }
 
+/**
+ * @brief 挑战模式按钮点击事件
+ * 发送开始挑战模式的信号
+ */
 void MenuWidget::on_btn_challenge_clicked() {
     emit startChallengeMode();
 }
 
+/**
+ * @brief 排行榜按钮点击事件
+ * 发送显示排行榜的信号
+ */
 void MenuWidget::on_btn_ranking_clicked() {
     emit showRanking();
 }

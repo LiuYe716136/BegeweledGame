@@ -7,6 +7,11 @@
 #include <QStyleOption>
 #include <QMessageBox>
 
+/**
+ * @brief GameWidget构造函数
+ * 初始化所有成员变量、UI和游戏资源
+ * @param parent 父窗口部件
+ */
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), ui(new Ui::GameWidget),
     m_game(new GameMap()),
@@ -41,10 +46,14 @@ GameWidget::GameWidget(QWidget *parent)
     ui->progressBar_time->setRange(0, 120);
     ui->progressBar_time->setValue(120);
     connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
-    // 设置进度条显示格式为 "剩余秒数s"（关键代码）
+    // 设置进度条显示格式为 "剩余秒数s"
     ui->progressBar_time->setFormat("%v s"); // %v 表示当前值，后面拼接 " s"
     ui->progressBar_time->setRange(0, 120); // 范围 0-120 秒
 }
+/**
+ * @brief GameWidget析构函数
+ * 释放所有资源
+ */
 GameWidget::~GameWidget() {
   delete m_game;
   delete m_timer;
@@ -54,6 +63,10 @@ GameWidget::~GameWidget() {
   delete m_soundClick;
   delete ui;
 }
+/**
+ * @brief 更新时间槽函数
+ * 挑战模式下每秒更新剩余时间，处理关卡完成和时间耗尽逻辑
+ */
 void GameWidget::updateTime() {
     if (m_gameMode != CHALLENGE) {
         return;
@@ -96,6 +109,11 @@ void GameWidget::updateTime() {
     }
 }
 
+/**
+ * @brief 绘图事件处理函数
+ * 负责绘制游戏界面的所有元素：背景、宝石、选中框、提示和分数
+ * @param event 绘图事件
+ */
 void GameWidget::paintEvent(QPaintEvent *event) {
   Q_UNUSED(event);
   QPainter painter(this);
@@ -206,7 +224,7 @@ void GameWidget::paintEvent(QPaintEvent *event) {
       painter.drawLine(x1 + GEM_SIZE / 2, y1 + GEM_SIZE / 2, x2 + GEM_SIZE / 2, y2 + GEM_SIZE / 2);
   }
 
-  // 绘画分数
+  // 绘制分数
   if (ui->label_score) {
     // 绘制阴影（黑色，右下偏移2px）
     painter.save(); // 保存当前画家状态
@@ -224,6 +242,11 @@ void GameWidget::paintEvent(QPaintEvent *event) {
   }
 }
 
+/**
+ * @brief 鼠标点击事件处理函数
+ * 处理宝石的选中和交换逻辑
+ * @param event 鼠标事件
+ */
 void GameWidget::mousePressEvent(QMouseEvent *event) {
     // 如果游戏结束则不响应点击
     if (m_state == GAME_OVER) {
@@ -239,9 +262,10 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
   }
 
   if (m_selectedPos == QPoint(-1, -1)) {
+    // 第一次点击，选中宝石
     m_selectedPos = QPoint(c, r);
   } else {
-    // 检查是否相邻，确保交换有效（避免斜向交换）
+    // 第二次点击，检查是否相邻
     int selectedR = m_selectedPos.y();
     int selectedC = m_selectedPos.x();
     bool isAdjacent = false;
@@ -251,7 +275,7 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
     }
 
     if (isAdjacent) {
-      // 交换前保存当前状态和分数（核心修正）
+      // 交换前保存当前状态和分数
       m_game->saveState(m_score);
       m_game->swap(selectedR, selectedC, r, c);
 
@@ -262,21 +286,31 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
         m_game->swap(r, c, selectedR, selectedC);
         m_game->popLastState(); // 关键：清除无效状态
       } else {
+        // 有匹配时开始消除流程
         m_timer->start(500);
       }
     }
+    // 清除选中状态
     m_selectedPos = QPoint(-1, -1);
   }
 
   repaint();
 }
 
+/**
+ * @brief 重置按钮点击槽函数
+ * 停止当前计时并重新初始化游戏
+ */
 void GameWidget::on_btn_reset_clicked() {
     m_timeTimer->stop();  // 先停止当前计时
     initGame();           // 重新初始化游戏（会重新开始计时）
     update();
 }
 
+/**
+ * @brief 提示按钮点击槽函数
+ * 查找最佳移动并显示提示，3秒后自动隐藏
+ */
 void GameWidget::on_btn_hint_clicked() {
     findBestMove();
     update();
@@ -288,6 +322,10 @@ void GameWidget::on_btn_hint_clicked() {
     });
 }
 
+/**
+ * @brief 查找最佳移动
+ * 遍历所有可能的移动，找到能获得最高分数的交换
+ */
 void GameWidget::findBestMove() {
     m_isHinting = false;
     m_hintPos1 = QPoint(-1, -1);
@@ -297,7 +335,7 @@ void GameWidget::findBestMove() {
     
     for (int r = 0; r < ROW; r++) {
         for (int c = 0; c < COL; c++) {
-            const int dr[4] = {-1, 1, 0, 0};
+            const int dr[4] = {-1, 1, 0, 0}; // 上下左右四个方向
             const int dc[4] = {0, 0, -1, 1};
             
             for (int d = 0; d < 4; d++) {
@@ -309,12 +347,15 @@ void GameWidget::findBestMove() {
                 GemType type1 = m_game->getType(r, c);
                 GemType type2 = m_game->getType(nr, nc);
                 
-                if (type1 == type2) continue;
+                if (type1 == type2) continue; // 相同类型宝石交换无意义
                 
+                // 尝试交换
                 m_game->swap(r, c, nr, nc);
                 
+                // 检查是否有匹配
                 std::vector<QPoint> matches = m_game->checkMatches();
                 
+                // 计算得分
                 int moveScore = 0;
                 for (const auto& match : matches) {
                     int matchR = match.y();
@@ -322,8 +363,10 @@ void GameWidget::findBestMove() {
                     moveScore += m_game->getGemScore(matchR, matchC);
                 }
                 
+                // 交换回来
                 m_game->swap(r, c, nr, nc);
                 
+                // 更新最佳移动
                 if (moveScore > bestScore) {
                     bestScore = moveScore;
                     m_hintPos1 = QPoint(c, r);
@@ -335,6 +378,10 @@ void GameWidget::findBestMove() {
     }
 }
 
+/**
+ * @brief 撤销按钮点击槽函数
+ * 撤销上一步操作，恢复到之前的游戏状态
+ */
 void GameWidget::on_btn_undo_clicked() {
   if (m_game->undo()) {
     // 从GameMap获取撤销前的分数并更新
@@ -344,6 +391,10 @@ void GameWidget::on_btn_undo_clicked() {
   }
 }
 
+/**
+ * @brief 游戏状态更新函数（核心）
+ * 由定时器触发，处理消除->下落->生成的流程
+ */
 void GameWidget::updateGameState() {
     std::vector<QPoint> matches = m_game->checkMatches();
 
@@ -363,11 +414,15 @@ void GameWidget::updateGameState() {
         m_score += roundScore;
         ui->label_score->setText(QString::number(m_score));
 
+        // 继续下一个消除步骤
         m_timer->start(500);
     } else {
+        // 无匹配时应用重力
         m_game->applyGravity();
+        // 检查新的匹配
         matches = m_game->checkMatches();
         if (!matches.empty()) {
+            // 有新匹配继续消除
             m_timer->start(500);
         } else {
             // 下落完成后仍无匹配，检查是否为死局
@@ -385,13 +440,17 @@ void GameWidget::updateGameState() {
                 // 3. 分数保持不变，无需修改m_score和label_score
                 qDebug() << "死局！已重置地图，分数保留";
             }
+            // 停止定时器
             m_timer->stop();
         }
     }
+    // 刷新界面
     update();
 }
-// 内部辅助函数
-
+/**
+ * @brief 初始化游戏
+ * 重置游戏状态、地图、分数和UI
+ */
 void GameWidget::initGame() {
     // 初始化逻辑数据
     m_game->clearHistory();
@@ -422,6 +481,10 @@ void GameWidget::initGame() {
     update();
 }
 
+/**
+ * @brief 加载游戏资源
+ * 初始化音效、背景图片和界面按钮
+ */
 void GameWidget::loadResources() {
   // 初始化音效变量
   m_soundSwap = new QSoundEffect(this);
@@ -505,7 +568,7 @@ void GameWidget::loadResources() {
     qDebug() << "背景图片设置完成！";
   }
   
-  // Create music control button
+  // 创建音乐控制按钮
   m_musicBtn = new QPushButton(this);
   m_musicBtn->setGeometry(720, 20, 50, 50);
   m_musicBtn->setText("♪");
@@ -539,7 +602,7 @@ void GameWidget::loadResources() {
       }
   });
   
-  // Create back button
+  // 创建返回菜单按钮
   QPushButton *btn_back = new QPushButton(this);
   btn_back->setGeometry(20, 20, 100, 30);
   btn_back->setText("返回菜单");
@@ -564,6 +627,7 @@ void GameWidget::loadResources() {
   
   connect(btn_back, &QPushButton::clicked, this, &GameWidget::backToMenu);
   
+  // 创建结束游戏按钮
   QPushButton *btn_endGame = new QPushButton(this);
   btn_endGame->setGeometry(660, 530, 120, 50);
   btn_endGame->setText("结束游戏");
@@ -600,13 +664,20 @@ void GameWidget::loadResources() {
       emit backToMenu();
   });
   
-  // Hide end game button by default, will be shown in endless mode
+  // 默认隐藏结束游戏按钮，在无尽模式中显示
   btn_endGame->hide();
   
-  // Store reference to end game button
+  // 保存结束游戏按钮的引用
   m_endGameBtn = btn_endGame;
 }
 
+/**
+ * @brief 坐标转换：屏幕像素坐标 -> 数组行列坐标
+ * @param pt 屏幕像素坐标
+ * @param r 数组行坐标（输出参数）
+ * @param c 数组列坐标（输出参数）
+ * @return true 表示转换成功
+ */
 bool GameWidget::screenToRowCol(QPoint pt, int &r, int &c) {
   // 获取游戏板的位置和大小（像素）
   QRect boardRect = ui->frame_board->geometry();
@@ -636,6 +707,10 @@ bool GameWidget::screenToRowCol(QPoint pt, int &r, int &c) {
   return false;
 }
 
+/**
+ * @brief 设置游戏模式
+ * @param mode 游戏模式（无尽模式/挑战模式）
+ */
 void GameWidget::setGameMode(GameMode mode) {
     m_gameMode = mode;
     
@@ -650,11 +725,20 @@ void GameWidget::setGameMode(GameMode mode) {
     initGame();
 }
 
+/**
+ * @brief 设置挑战模式的关卡
+ * @param level 关卡数
+ */
 void GameWidget::setChallengeLevel(int level) {
     m_challengeLevel = level;
     m_targetScore = getChallengeTargetScore(level);
 }
 
+/**
+ * @brief 获取挑战模式下的关卡时间
+ * @param level 关卡数
+ * @return 关卡时间（秒），最低30秒
+ */
 int GameWidget::getChallengeTime(int level) const {
     int baseTime = 120;
     int reduction = (level - 1) * 5;  // 每关减少5秒，允许更多关卡
@@ -662,6 +746,11 @@ int GameWidget::getChallengeTime(int level) const {
     return qMax(baseTime - reduction, minTime);
 }
 
+/**
+ * @brief 获取挑战模式下的关卡目标分数
+ * @param level 关卡数
+ * @return 目标分数，每关递增且有随机波动
+ */
 int GameWidget::getChallengeTargetScore(int level) const {
     if (level == 1) {
         return 1000;
@@ -672,15 +761,27 @@ int GameWidget::getChallengeTargetScore(int level) const {
     return baseScore + (level - 1) * 500 + randomIncrease;
 }
 
+/**
+ * @brief 获取当前游戏模式
+ * @return 当前游戏模式
+ */
 GameWidget::GameMode GameWidget::gameMode() const {
     return m_gameMode;
 }
 
+/**
+ * @brief 设置背景音乐播放器
+ * @param player 音乐播放器指针
+ */
 void GameWidget::setBgMusicPlayer(QMediaPlayer *player) {
     m_bgMusicPlayer = player;
     m_musicEnabled = true;
 }
 
+/**
+ * @brief 更新排行榜部件
+ * @param rankingWidget 排行榜部件指针
+ */
 void GameWidget::updateRankingWidget(RankingWidget *rankingWidget) {
     m_rankingWidget = rankingWidget;
 }
