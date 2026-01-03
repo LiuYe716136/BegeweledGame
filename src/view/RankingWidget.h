@@ -76,17 +76,29 @@ private slots:
      * @brief 清空排行榜按钮点击槽函数
      */
     void on_btn_clearRanking_clicked();
+    
+    /**
+     * @brief 音乐按钮点击槽函数
+     */
+    void on_btn_music_clicked();
 
 signals:
     /**
      * @brief 返回菜单信号
      */
     void backToMenu();
+    
+    /**
+     * @brief 音乐开关状态变化信号
+     * @param enabled 是否开启音乐
+     */
+    void musicToggle(bool enabled);
 
 private:
     Ui::RankingWidget *ui;                     ///< UI 指针
     std::vector<RankingItem> m_endlessRanking;  ///< 无尽模式排行榜数据
     std::vector<RankingItem> m_challengeRanking; ///< 挑战模式排行榜数据
+    bool m_musicEnabled;                       ///< 音乐开关状态
     
     /**
      * @brief 加载无尽模式排行榜

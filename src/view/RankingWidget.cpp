@@ -13,10 +13,12 @@
  * @param parent 父窗口部件
  */
 RankingWidget::RankingWidget(QWidget *parent)
-    : QWidget(parent), ui(new Ui::RankingWidget) {
+    : QWidget(parent), ui(new Ui::RankingWidget), m_musicEnabled(true) {
   ui->setupUi(this);
-  loadBackground();
+  this->setObjectName("RankingWidget");
   loadRanking();
+  connect(ui->btn_music, &QPushButton::clicked, this,
+          &RankingWidget::on_btn_music_clicked);
 }
 
 /**
@@ -26,61 +28,12 @@ RankingWidget::RankingWidget(QWidget *parent)
 RankingWidget::~RankingWidget() { delete ui; }
 
 /**
- * @brief 加载背景图片
- * 设置排行榜界面的背景图片和样式
+ * @brief 音乐按钮点击槽函数
+ * 切换音乐开关状态并发出信号
  */
-void RankingWidget::loadBackground() {
-  QPixmap backgroundPixmap;
-  bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/login_bg.jpg");
-
-  if (loadSuccess) {
-    this->setStyleSheet("#RankingWidget { "
-                        "border-image: url(:/bgs/assets/images/login_bg.jpg) 0 "
-                        "0 0 0 stretch stretch; "
-                        "background-color: #000000; "
-                        "}"
-                        "QLabel { "
-                        "color: white; "
-                        "font-family: 'Microsoft YaHei'; "
-                        "font-weight: bold; "
-                        "}"
-                        "QPushButton { "
-                        "background-color: rgba(255, 255, 255, 200); "
-                        "border: 2px solid #8f8f91; "
-                        "border-radius: 10px; "
-                        "padding: 5px; "
-                        "font-size: 16px; "
-                        "color: #333; "
-                        "font-weight: bold; "
-                        "}"
-                        "QPushButton:hover { "
-                        "background-color: rgba(255, 255, 255, 240); "
-                        "border-color: #ffffff; "
-                        "}"
-                        "QPushButton:pressed { "
-                        "background-color: rgba(200, 200, 200, 200); "
-                        "}"
-                        "QListWidget { "
-                        "background-color: rgba(0, 0, 0, 180); "
-                        "color: white; "
-                        "font-size: 16px; "
-                        "border: 2px solid gold; "
-                        "border-radius: 5px; "
-                        "}"
-                        "QTabWidget { "
-                        "background-color: rgba(0, 0, 0, 0); "
-                        "}"
-                        "QTabBar::tab { "
-                        "background-color: rgba(255, 255, 255, 150); "
-                        "color: #333; "
-                        "font-size: 16px; "
-                        "font-weight: bold; "
-                        "padding: 10px; "
-                        "}"
-                        "QTabBar::tab:selected { "
-                        "background-color: rgba(255, 215, 0, 200); "
-                        "}");
-  }
+void RankingWidget::on_btn_music_clicked() {
+  m_musicEnabled = !m_musicEnabled;
+  emit musicToggle(m_musicEnabled);
 }
 
 /**

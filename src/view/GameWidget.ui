@@ -25,6 +25,50 @@
   <property name="windowTitle">
    <string>宝石迷阵 - Bejeweled</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#GameWidget { 
+  background-image: url(:/bgs/assets/images/game_bg.jpg);
+  background-color: #000000; 
+}
+QLabel { 
+  color: white; 
+  font-family: 'Microsoft YaHei'; 
+  font-weight: bold; 
+}
+QPushButton { 
+  background-color: rgba(255, 255, 255, 200); 
+  border: 2px solid #8f8f91; 
+  border-radius: 10px; 
+  padding: 5px; 
+  font-size: 16px; 
+  color: #333; 
+  font-weight: bold; 
+}
+QPushButton:hover { 
+  background-color: rgba(255, 255, 255, 240); 
+  border-color: #ffffff; 
+}
+QPushButton:pressed { 
+  background-color: rgba(200, 200, 200, 200); 
+}
+QFrame { 
+  background-color: rgba(0, 0, 0, 0); 
+  border: 2px solid rgba(255, 255, 255, 50); 
+  border-radius: 5px; 
+}
+QProgressBar { 
+  border: 2px solid grey; 
+  border-radius: 5px; 
+  text-align: center; 
+  background-color: rgba(0,0,0,150); 
+  color: white; 
+}
+QProgressBar::chunk { 
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+  stop:0 rgba(0, 180, 0, 255), stop:1 rgba(0, 255, 0, 255)); 
+  border-radius: 3px; 
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
    <property name="spacing">
     <number>20</number>
@@ -210,6 +254,22 @@ text-shadow: 2px 2px 2px black;</string>
          <height>50</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton { 
+  background-color: rgba(255, 100, 100, 150); 
+  border: 2px solid red; 
+  border-radius: 10px; 
+  font-size: 14px; 
+  font-weight: bold; 
+  color: white; 
+}
+QPushButton:hover { 
+  background-color: rgba(255, 100, 100, 200); 
+}
+QPushButton:pressed { 
+  background-color: rgba(255, 100, 100, 100); 
+}</string>
+       </property>
        <property name="text">
         <string>结束游戏</string>
        </property>
@@ -231,6 +291,35 @@ text-shadow: 2px 2px 2px black;</string>
     </layout>
    </item>
   </layout>
+  <widget class="QPushButton" name="btn_music">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>20</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton { 
+  background-color: rgba(255, 215, 0, 150); 
+  border: 2px solid gold; 
+  border-radius: 25px; 
+  font-size: 24px; 
+  font-weight: bold; 
+  color: #333; 
+}
+QPushButton:hover { 
+  background-color: rgba(255, 215, 0, 200); 
+}
+QPushButton:pressed { 
+  background-color: rgba(255, 215, 0, 100); 
+}</string>
+   </property>
+   <property name="text">
+    <string>♪</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

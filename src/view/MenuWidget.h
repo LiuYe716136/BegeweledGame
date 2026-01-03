@@ -74,16 +74,7 @@ private slots:
 
 private:
     Ui::MenuWidget *ui; ///< UI对象指针
-    /**
-     * @brief 加载背景样式
-     */
-    void loadBackground();
-    /**
-     * @brief 创建音乐控制按钮
-     */
-    void createMusicButton(); 
     QMediaPlayer *m_bgMusicPlayer; ///< 背景音乐播放器指针
-    QPushButton *m_musicBtn; ///< 音乐控制按钮
     bool m_musicEnabled; ///< 音乐是否启用
 };
 

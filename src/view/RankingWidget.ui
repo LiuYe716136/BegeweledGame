@@ -13,6 +13,37 @@
   <property name="windowTitle">
    <string>排行榜</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#RankingWidget { 
+   background-image: url(:/bgs/assets/images/menu_bg.jpg);
+}
+QLabel { color: white; font-family: 'Microsoft YaHei'; font-weight: bold; }
+QPushButton { background-color: rgba(255, 255, 255, 200); border: 2px solid #8f8f91; border-radius: 10px; padding: 5px; font-size: 16px; color: #333; font-weight: bold; }
+QPushButton:hover { background-color: rgba(255, 255, 255, 240); border-color: #ffffff; }
+QPushButton:pressed { background-color: rgba(200, 200, 200, 200); }
+QListWidget { background-color: rgba(0, 0, 0, 180); color: white; font-size: 16px; border: 2px solid gold; border-radius: 5px; }
+QTabWidget { background-color: rgba(0, 0, 0, 0); }
+QTabBar::tab { background-color: rgba(255, 255, 255, 150); color: #333; font-size: 16px; font-weight: bold; padding: 10px; }
+QTabBar::tab:selected { background-color: rgba(255, 215, 0, 200); }</string>
+  </property>
+  <widget class="QPushButton" name="btn_music">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>20</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton { background-color: rgba(255, 215, 0, 150); border: 2px solid gold; border-radius: 25px; font-size: 24px; font-weight: bold; color: #333; }
+QPushButton:hover { background-color: rgba(255, 215, 0, 200); }
+QPushButton:pressed { background-color: rgba(255, 215, 0, 100); }</string>
+   </property>
+   <property name="text">
+    <string>♪</string>
+   </property>
+  </widget>
   <widget class="QLabel" name="label_title">
    <property name="geometry">
     <rect>
@@ -24,6 +55,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Microsoft YaHei</family>
      <pointsize>28</pointsize>
      <bold>true</bold>
     </font>
@@ -92,7 +124,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>-1</pointsize>
      <bold>true</bold>
     </font>
    </property>
@@ -111,7 +143,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>-1</pointsize>
      <bold>true</bold>
     </font>
    </property>

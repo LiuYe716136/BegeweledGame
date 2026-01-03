@@ -186,12 +186,14 @@ debug/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qttranslation.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qversiontagging.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtmetamacros.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qrefcount.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qarraydata.h \
@@ -204,14 +206,6 @@ debug/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringfwd.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringliteral.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qanystringview.h \
@@ -225,10 +219,12 @@ debug/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringlist.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringmatcher.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopedpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetatype.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcompare.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatastream.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfloat16.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmath.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qiterable.h \
@@ -238,22 +234,34 @@ debug/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopeguard.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbindingstorage.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qurl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvariant.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdebug.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtextstream.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringconverter_base.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcontiguouscache.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qset.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qhash.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvarlengtharray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qeventpoint.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvector2d.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvectornd.h \
@@ -292,34 +300,26 @@ debug/moc_GameWidget.cpp: ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontinfo.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfont.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontmetrics.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QSoundEffect \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qsoundeffect.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QWidget \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		debug/moc_predefs.h \
 		D:/Qt/6.5.3/mingw_64/bin/moc.exe
 	D:\Qt\6.5.3\mingw_64\bin\moc.exe $(DEFINES) --include "D:/C++/C++ Homework/宝石迷阵/BegeweledGame/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/debug/moc_predefs.h" -ID:/Qt/6.5.3/mingw_64/mkspecs/win32-g++ -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/model" -I"D:/C++/C++ Homework/宝石迷阵/BegeweledGame/src/view" -ID:/Qt/6.5.3/mingw_64/include -ID:/Qt/6.5.3/mingw_64/include/QtMultimedia -ID:/Qt/6.5.3/mingw_64/include/QtWidgets -ID:/Qt/6.5.3/mingw_64/include/QtGui -ID:/Qt/6.5.3/mingw_64/include/QtNetwork -ID:/Qt/6.5.3/mingw_64/include/QtCore -I. -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -ID:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -ID:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\src\view\GameWidget.h -o debug\moc_GameWidget.cpp
@@ -740,12 +740,14 @@ debug/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qttranslation.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qversiontagging.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtmetamacros.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qrefcount.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qarraydata.h \
@@ -758,14 +760,6 @@ debug/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringfwd.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringliteral.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qanystringview.h \
@@ -779,10 +773,12 @@ debug/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringlist.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringmatcher.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopedpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetatype.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcompare.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatastream.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfloat16.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmath.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qiterable.h \
@@ -792,22 +788,34 @@ debug/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopeguard.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbindingstorage.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qurl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvariant.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdebug.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtextstream.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringconverter_base.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcontiguouscache.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qset.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qhash.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvarlengtharray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qeventpoint.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvector2d.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvectornd.h \
@@ -846,34 +854,26 @@ debug/main.o: ../../main.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontinfo.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfont.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontmetrics.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QSoundEffect \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qsoundeffect.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QWidget \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../src/view/MenuWidget.h \
 		../../src/view/RankingWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
@@ -1010,12 +1010,14 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qttranslation.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qversiontagging.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtmetamacros.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qrefcount.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qarraydata.h \
@@ -1028,14 +1030,6 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringfwd.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstring.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringview.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringliteral.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qanystringview.h \
@@ -1049,10 +1043,12 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringlist.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringmatcher.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopedpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetatype.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcompare.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatastream.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevicebase.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfloat16.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmath.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qiterable.h \
@@ -1062,22 +1058,34 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qscopeguard.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qobject_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbindingstorage.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qurl.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtgui-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qtguiexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvariant.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdebug.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtextstream.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qstringconverter_base.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcontiguouscache.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qshareddata_impl.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qset.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qhash.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qvarlengtharray.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
+		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/QMouseEvent \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qevent.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qiodevice.h \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qpointer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qeventpoint.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvector2d.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qvectornd.h \
@@ -1116,34 +1124,27 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontinfo.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfont.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/qfontmetrics.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
+		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QSoundEffect \
 		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qsoundeffect.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qaudio.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QTimer \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qtimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qbasictimer.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QWidget \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qwidget.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qaction.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qicon.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qpalette.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qcursor.h \
-		D:/Qt/6.5.3/mingw_64/include/QtGui/qbitmap.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/QMediaPlayer \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaplayer.h \
-		D:/Qt/6.5.3/mingw_64/include/QtMultimedia/qmediaenumdebug.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qmetaobject.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
+		../../src/view/RankingWidget.h \
 		ui_GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QVariant \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
@@ -1183,7 +1184,6 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qprogressbar.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QSpacerItem \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QVBoxLayout \
-		../../src/view/RankingWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QFile \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfile.h \
@@ -1192,6 +1192,9 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfileinfo.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qdatetime.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qcalendar.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QMessageBox \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qmessagebox.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qdialog.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QStyleOption \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qstyleoption.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractspinbox.h \
@@ -1203,10 +1206,7 @@ debug/GameWidget.o: ../../src/view/GameWidget.cpp ../../src/view/GameWidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabbar.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabwidget.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qrubberband.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/qabstractitemmodel.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QMessageBox \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qmessagebox.h \
-		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qdialog.h
+		D:/Qt/6.5.3/mingw_64/include/QtCore/qabstractitemmodel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\GameWidget.o ..\..\src\view\GameWidget.cpp
 
 debug/MenuWidget.o: ../../src/view/MenuWidget.cpp ../../src/view/MenuWidget.h \
@@ -1630,13 +1630,16 @@ debug/RankingWidget.o: ../../src/view/RankingWidget.cpp ../../src/view/RankingWi
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QTabWidget \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/QFile \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfile.h \
 		D:/Qt/6.5.3/mingw_64/include/QtCore/qfiledevice.h \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/QTextStream \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/QStringList \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/QMessageBox \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qmessagebox.h \
+		D:/Qt/6.5.3/mingw_64/include/QtWidgets/qdialog.h \
 		D:/Qt/6.5.3/mingw_64/include/QtGui/QPixmap \
-		D:/Qt/6.5.3/mingw_64/include/QtCore/QDebug
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QStringList \
+		D:/Qt/6.5.3/mingw_64/include/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\RankingWidget.o ..\..\src\view\RankingWidget.cpp
 
 debug/qrc_resources.o: debug/qrc_resources.cpp 
