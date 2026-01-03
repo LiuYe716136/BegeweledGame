@@ -70,63 +70,47 @@ std::vector<QPoint> GameMap::checkMatches() {
 
   // 1. 横向检测：连续3个及以上相同
   for (int r = 0; r < ROW; r++) {
-    int count = 1;
-    for (int c = 1; c < COL; c++) {
-      if (m_map[r][c].type != EMPTY &&
-          m_map[r][c].type == m_map[r][c - 1].type) {
-        count++;
-      } else {
-        if (count >= 3) {
-          // 标记连续匹配的宝石
-          for (int i = c - count; i < c; i++) {
-            if (!visited[r][i]) {
-              visited[r][i] = true;
-              matches.push_back(QPoint(i, r));
-            }
+    int start = 0;
+    while (start < COL) {
+      int end = start + 1;
+      // 找到连续相同的宝石
+      while (end < COL && m_map[r][end].type != EMPTY &&
+             m_map[r][end].type == m_map[r][start].type) {
+        end++;
+      }
+      // 如果连续数量>=3，则添加到匹配列表
+      if (end - start >= 3) {
+        for (int c = start; c < end; c++) {
+          if (!visited[r][c]) {
+            visited[r][c] = true;
+            matches.push_back(QPoint(c, r));
           }
         }
-        count = 1;
       }
-    }
-    // 检查行末是否有匹配
-    if (count >= 3) {
-      for (int i = COL - count; i < COL; i++) {
-        if (!visited[r][i]) {
-          visited[r][i] = true;
-          matches.push_back(QPoint(i, r));
-        }
-      }
+      start = end;
     }
   }
 
   // 2. 纵向检测：连续3个及以上相同
   for (int c = 0; c < COL; c++) {
-    int count = 1;
-    for (int r = 1; r < ROW; r++) {
-      if (m_map[r][c].type != EMPTY &&
-          m_map[r][c].type == m_map[r - 1][c].type) {
-        count++;
-      } else {
-        if (count >= 3) {
-          // 标记连续匹配的宝石
-          for (int i = r - count; i < r; i++) {
-            if (!visited[i][c]) {
-              visited[i][c] = true;
-              matches.push_back(QPoint(c, i));
-            }
+    int start = 0;
+    while (start < ROW) {
+      int end = start + 1;
+      // 找到连续相同的宝石
+      while (end < ROW && m_map[end][c].type != EMPTY &&
+             m_map[end][c].type == m_map[start][c].type) {
+        end++;
+      }
+      // 如果连续数量>=3，则添加到匹配列表
+      if (end - start >= 3) {
+        for (int r = start; r < end; r++) {
+          if (!visited[r][c]) {
+            visited[r][c] = true;
+            matches.push_back(QPoint(c, r));
           }
         }
-        count = 1;
       }
-    }
-    // 检查列末是否有匹配
-    if (count >= 3) {
-      for (int i = ROW - count; i < ROW; i++) {
-        if (!visited[i][c]) {
-          visited[i][c] = true;
-          matches.push_back(QPoint(c, i));
-        }
-      }
+      start = end;
     }
   }
 

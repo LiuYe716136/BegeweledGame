@@ -84,7 +84,7 @@ void MenuWidget::onMusicBtnClicked() {
             m_musicBtn->setText("♪");
         } else {
             m_bgMusicPlayer->pause();
-            m_musicBtn->setText("♪");
+            m_musicBtn->setText("✕");
         }
     }
 }

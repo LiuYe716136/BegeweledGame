@@ -23,16 +23,7 @@ enum GemType {
 };
 
 // 宝石分值 (每种颜色对应不同分值)
-const int GEM_SCORES[] = {
-    0,  // EMPTY
-    10, // RED
-    20, // ORANGE
-    15, // YELLOW
-    25, // GREEN
-    30, // WHITE
-    35, // BLUE
-    40  // PURPLE
-};
+extern const int GEM_SCORES[];
 
 // 游戏状态 (控制点击逻辑)
 enum GameState {

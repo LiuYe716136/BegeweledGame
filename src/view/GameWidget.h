@@ -120,6 +120,11 @@ private slots:
   void on_btn_undo_clicked();
   
   /**
+   * @brief 结束游戏按钮点击槽函数
+   */
+  void on_btn_endGame_clicked();
+  
+  /**
    * @brief 时间更新槽函数
    * 挑战模式下更新剩余时间
    */
@@ -144,10 +149,7 @@ private:
   int m_challengeLevel;       ///< 当前关卡
   int m_targetScore;          ///< 目标分数（闯关模式）
 
-  // 音效
-  QSoundEffect *m_soundSwap;      ///< 交换音效
-  QSoundEffect *m_soundEliminate; ///< 消除音效
-  QSoundEffect *m_soundClick;     ///< 点击音效
+
   QMediaPlayer *m_bgMusicPlayer;  ///< 背景音乐播放器
   bool m_musicEnabled;            ///< 音乐开关状态
 
@@ -159,7 +161,6 @@ private:
   
   RankingWidget *m_rankingWidget; ///< 排行榜部件指针
   QPushButton *m_musicBtn;        ///< 音乐控制按钮
-  QPushButton *m_endGameBtn;      ///< 结束游戏按钮
 
   /**
    * @brief 获取挑战模式下的关卡时间

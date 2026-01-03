@@ -71,6 +71,11 @@ private slots:
      * @brief 返回菜单按钮点击槽函数
      */
     void on_btn_back_clicked();
+    
+    /**
+     * @brief 清空排行榜按钮点击槽函数
+     */
+    void on_btn_clearRanking_clicked();
 
 signals:
     /**

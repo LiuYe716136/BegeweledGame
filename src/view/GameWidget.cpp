@@ -17,9 +17,10 @@ GameWidget::GameWidget(QWidget *parent)
     m_game(new GameMap()),
     m_timer(new QTimer(this)),
     m_timeTimer(new QTimer(this)),  // 初始化计时定时器
-    m_soundSwap(nullptr),
-    m_soundEliminate(nullptr),
-    m_soundClick(nullptr),
+    // 音效变量 - 暂时未实现
+    // m_soundSwap(nullptr),
+    // m_soundEliminate(nullptr),
+    // m_soundClick(nullptr),
     m_selectedPos(-1, -1),
     m_state(IDLE),
     m_score(0),
@@ -30,7 +31,6 @@ GameWidget::GameWidget(QWidget *parent)
     m_musicEnabled(true),
     m_rankingWidget(nullptr),
     m_musicBtn(nullptr),
-    m_endGameBtn(nullptr),
     m_isHinting(false) {
     ui->setupUi(this);
 
@@ -42,13 +42,8 @@ GameWidget::GameWidget(QWidget *parent)
     connect(m_timer, &QTimer::timeout, this, &GameWidget::updateGameState);
 
     // 初始化计时相关
-    m_remainingTime = 120;
-    ui->progressBar_time->setRange(0, 120);
-    ui->progressBar_time->setValue(120);
-    connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
-    // 设置进度条显示格式为 "剩余秒数s"
     ui->progressBar_time->setFormat("%v s"); // %v 表示当前值，后面拼接 " s"
-    ui->progressBar_time->setRange(0, 120); // 范围 0-120 秒
+    connect(m_timeTimer, &QTimer::timeout, this, &GameWidget::updateTime);
 }
 /**
  * @brief GameWidget析构函数
@@ -58,9 +53,10 @@ GameWidget::~GameWidget() {
   delete m_game;
   delete m_timer;
   delete m_timeTimer;
-  delete m_soundSwap;
-  delete m_soundEliminate;
-  delete m_soundClick;
+  // 删除音效变量 - 暂时未实现
+  // delete m_soundSwap;
+  // delete m_soundEliminate;
+  // delete m_soundClick;
   delete ui;
 }
 /**
@@ -392,6 +388,32 @@ void GameWidget::on_btn_undo_clicked() {
 }
 
 /**
+ * @brief 结束游戏按钮点击槽函数
+ * 处理结束游戏的逻辑，停止计时，显示最终得分，然后返回主菜单
+ */
+void GameWidget::on_btn_endGame_clicked() {
+    // 停止计时器
+    m_timeTimer->stop();
+    m_timer->stop();
+    
+    // 弹出消息框显示最终得分
+    QMessageBox msgBox;
+    if (m_gameMode == CHALLENGE) {
+        msgBox.setWindowTitle("游戏结束");
+        msgBox.setText(QString("你结束了游戏！\n你完成了第%1关！\n最终得分是：%2").arg(m_challengeLevel).arg(m_score));
+    } else {
+        msgBox.setWindowTitle("游戏结束");
+        msgBox.setText(QString("你结束了游戏！\n最终得分是：%1").arg(m_score));
+    }
+    msgBox.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }");
+    msgBox.exec();
+    
+    // 发出游戏结束信号和返回菜单信号
+    emit gameOver(m_score, m_challengeLevel);
+    emit backToMenu();
+}
+
+/**
  * @brief 游戏状态更新函数（核心）
  * 由定时器触发，处理消除->下落->生成的流程
  */
@@ -486,39 +508,16 @@ void GameWidget::initGame() {
  * 初始化音效、背景图片和界面按钮
  */
 void GameWidget::loadResources() {
-  // 初始化音效变量
-  m_soundSwap = new QSoundEffect(this);
-  m_soundEliminate = new QSoundEffect(this);
-  m_soundClick = new QSoundEffect(this);
+  // 初始化音效变量 - 暂时未实现
+  // m_soundSwap = new QSoundEffect(this);
+  // m_soundEliminate = new QSoundEffect(this);
+  // m_soundClick = new QSoundEffect(this);
   
-  // 1. 检查资源路径是否存在
-  QFileInfo resourceInfo(":/bgs/assets/images/game_bg.jpg");
-  qDebug() << "资源文件存在吗？" << resourceInfo.exists();
-  qDebug() << "资源文件路径：" << ":/bgs/assets/images/game_bg.jpg";
-
-  // 2. 尝试使用QPixmap加载
+  // 1. 尝试加载背景图片
   QPixmap backgroundPixmap;
   bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/game_bg.jpg");
-  qDebug() << "QPixmap加载成功？" << loadSuccess;
-  qDebug() << "图片尺寸：" << backgroundPixmap.size();
 
-  // 3. 尝试使用QImage加载
-  QImage backgroundImage;
-  bool imageLoadSuccess =
-      backgroundImage.load(":/bgs/assets/images/game_bg.jpg");
-  qDebug() << "QImage加载成功？" << imageLoadSuccess;
-  qDebug() << "图片尺寸：" << backgroundImage.size();
-
-  // 4. 尝试使用QFile直接读取
-  QFile resourceFile(":/bgs/assets/images/game_bg.jpg");
-  if (resourceFile.open(QIODevice::ReadOnly)) {
-    qDebug() << "QFile读取成功，文件大小：" << resourceFile.size() << " bytes";
-    resourceFile.close();
-  } else {
-    qDebug() << "QFile读取失败：" << resourceFile.errorString();
-  }
-
-  // 5. 设置背景图片
+  // 2. 设置背景图片
   if (loadSuccess) {
     // 使用border-image代替background-image，确保能自适应窗口大小且完全覆盖
     this->setStyleSheet(
@@ -565,7 +564,6 @@ void GameWidget::loadResources() {
         "stop:0 rgba(0, 180, 0, 255), stop:1 rgba(0, 255, 0, 255)); "
         "border-radius: 3px; "
         "}");
-    qDebug() << "背景图片设置完成！";
   }
   
   // 创建音乐控制按钮
@@ -597,35 +595,12 @@ void GameWidget::loadResources() {
               m_musicBtn->setText("♪");
           } else {
               m_bgMusicPlayer->pause();
-              m_musicBtn->setText("♪");
+              m_musicBtn->setText("✕");
           }
       }
   });
   
-  // 创建返回菜单按钮
-  QPushButton *btn_back = new QPushButton(this);
-  btn_back->setGeometry(20, 20, 100, 30);
-  btn_back->setText("返回菜单");
-  btn_back->setStyleSheet(
-      "QPushButton { "
-      "background-color: rgba(255, 255, 255, 150); "
-      "border: 2px solid #8f8f91; "
-      "border-radius: 10px; "
-      "padding: 5px; "
-      "font-size: 14px; "
-      "color: #333; "
-      "font-weight: bold; "
-      "}"
-      "QPushButton:hover { "
-      "background-color: rgba(255, 255, 255, 200); "
-      "border-color: #ffffff; "
-      "}"
-      "QPushButton:pressed { "
-      "background-color: rgba(200, 200, 200, 150); "
-      "}"
-  );
-  
-  connect(btn_back, &QPushButton::clicked, this, &GameWidget::backToMenu);
+  // 删除了返回菜单按钮
   
   // 创建结束游戏按钮
   QPushButton *btn_endGame = new QPushButton(this);
@@ -666,9 +641,6 @@ void GameWidget::loadResources() {
   
   // 默认隐藏结束游戏按钮，在无尽模式中显示
   btn_endGame->hide();
-  
-  // 保存结束游戏按钮的引用
-  m_endGameBtn = btn_endGame;
 }
 
 /**
@@ -716,11 +688,6 @@ void GameWidget::setGameMode(GameMode mode) {
     
     m_challengeLevel = 1;
     m_targetScore = getChallengeTargetScore(1);
-    
-    if (m_endGameBtn) {
-        m_endGameBtn->show();
-        m_endGameBtn->raise();
-    }
     
     initGame();
 }

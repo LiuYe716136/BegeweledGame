@@ -1,87 +1,86 @@
 #include "RankingWidget.h"
 #include "ui_RankingWidget.h"
-#include <QFile>
-#include <QTextStream>
-#include <QStringList>
-#include <QPixmap>
 #include <QDebug>
+#include <QFile>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QStringList>
+#include <QTextStream>
 
 /**
  * @brief RankingWidget构造函数
  * 初始化UI、加载背景图片和排行榜数据
  * @param parent 父窗口部件
  */
-RankingWidget::RankingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::RankingWidget) {
-    ui->setupUi(this);
-    loadBackground();
-    loadRanking();
+RankingWidget::RankingWidget(QWidget *parent)
+    : QWidget(parent), ui(new Ui::RankingWidget) {
+  ui->setupUi(this);
+  loadBackground();
+  loadRanking();
 }
 
 /**
  * @brief RankingWidget析构函数
  * 释放UI资源
  */
-RankingWidget::~RankingWidget() {
-    delete ui;
-}
+RankingWidget::~RankingWidget() { delete ui; }
 
 /**
  * @brief 加载背景图片
  * 设置排行榜界面的背景图片和样式
  */
 void RankingWidget::loadBackground() {
-    QPixmap backgroundPixmap;
-    bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/login_bg.jpg");
-    
-    if (loadSuccess) {
-        this->setStyleSheet(
-            "#RankingWidget { "
-            "border-image: url(:/bgs/assets/images/login_bg.jpg) 0 0 0 0 stretch stretch; "
-            "background-color: #000000; "
-            "}"
-            "QLabel { "
-            "color: white; "
-            "font-family: 'Microsoft YaHei'; "
-            "font-weight: bold; "
-            "}"
-            "QPushButton { "
-            "background-color: rgba(255, 255, 255, 200); "
-            "border: 2px solid #8f8f91; "
-            "border-radius: 10px; "
-            "padding: 5px; "
-            "font-size: 16px; "
-            "color: #333; "
-            "font-weight: bold; "
-            "}"
-            "QPushButton:hover { "
-            "background-color: rgba(255, 255, 255, 240); "
-            "border-color: #ffffff; "
-            "}"
-            "QPushButton:pressed { "
-            "background-color: rgba(200, 200, 200, 200); "
-            "}"
-            "QListWidget { "
-            "background-color: rgba(0, 0, 0, 180); "
-            "color: white; "
-            "font-size: 16px; "
-            "border: 2px solid gold; "
-            "border-radius: 5px; "
-            "}"
-            "QTabWidget { "
-            "background-color: rgba(0, 0, 0, 0); "
-            "}"
-            "QTabBar::tab { "
-            "background-color: rgba(255, 255, 255, 150); "
-            "color: #333; "
-            "font-size: 16px; "
-            "font-weight: bold; "
-            "padding: 10px; "
-            "}"
-            "QTabBar::tab:selected { "
-            "background-color: rgba(255, 215, 0, 200); "
-            "}"
-        );
-    }
+  QPixmap backgroundPixmap;
+  bool loadSuccess = backgroundPixmap.load(":/bgs/assets/images/login_bg.jpg");
+
+  if (loadSuccess) {
+    this->setStyleSheet("#RankingWidget { "
+                        "border-image: url(:/bgs/assets/images/login_bg.jpg) 0 "
+                        "0 0 0 stretch stretch; "
+                        "background-color: #000000; "
+                        "}"
+                        "QLabel { "
+                        "color: white; "
+                        "font-family: 'Microsoft YaHei'; "
+                        "font-weight: bold; "
+                        "}"
+                        "QPushButton { "
+                        "background-color: rgba(255, 255, 255, 200); "
+                        "border: 2px solid #8f8f91; "
+                        "border-radius: 10px; "
+                        "padding: 5px; "
+                        "font-size: 16px; "
+                        "color: #333; "
+                        "font-weight: bold; "
+                        "}"
+                        "QPushButton:hover { "
+                        "background-color: rgba(255, 255, 255, 240); "
+                        "border-color: #ffffff; "
+                        "}"
+                        "QPushButton:pressed { "
+                        "background-color: rgba(200, 200, 200, 200); "
+                        "}"
+                        "QListWidget { "
+                        "background-color: rgba(0, 0, 0, 180); "
+                        "color: white; "
+                        "font-size: 16px; "
+                        "border: 2px solid gold; "
+                        "border-radius: 5px; "
+                        "}"
+                        "QTabWidget { "
+                        "background-color: rgba(0, 0, 0, 0); "
+                        "}"
+                        "QTabBar::tab { "
+                        "background-color: rgba(255, 255, 255, 150); "
+                        "color: #333; "
+                        "font-size: 16px; "
+                        "font-weight: bold; "
+                        "padding: 10px; "
+                        "}"
+                        "QTabBar::tab:selected { "
+                        "background-color: rgba(255, 215, 0, 200); "
+                        "}");
+  }
 }
 
 /**
@@ -89,10 +88,10 @@ void RankingWidget::loadBackground() {
  * 加载并显示无尽模式和挑战模式的排行榜数据
  */
 void RankingWidget::loadRanking() {
-    loadEndlessRanking();
-    loadChallengeRanking();
-    displayEndlessRanking();
-    displayChallengeRanking();
+  loadEndlessRanking();
+  loadChallengeRanking();
+  displayEndlessRanking();
+  displayChallengeRanking();
 }
 
 /**
@@ -100,33 +99,33 @@ void RankingWidget::loadRanking() {
  * 从文件中读取无尽模式的排名数据并按得分降序排序
  */
 void RankingWidget::loadEndlessRanking() {
-    m_endlessRanking.clear();
-    QFile file("endless_ranking.txt");
-    
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            QStringList parts = line.split(",");
-            if (parts.size() >= 2) {
-                RankingItem item;
-                item.name = parts[0];
-                item.score = parts[1].toInt();
-                item.level = 0;
-                m_endlessRanking.push_back(item);
-            }
-        }
-        file.close();
+  m_endlessRanking.clear();
+  QFile file("endless_ranking.txt");
+
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+      QString line = in.readLine();
+      QStringList parts = line.split(",");
+      if (parts.size() >= 2) {
+        RankingItem item;
+        item.name = parts[0];
+        item.score = parts[1].toInt();
+        item.level = 0;
+        m_endlessRanking.push_back(item);
+      }
     }
-    
-    // Sort by score (descending)
-    for (size_t i = 0; i < m_endlessRanking.size(); i++) {
-        for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
-            if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
-                std::swap(m_endlessRanking[i], m_endlessRanking[j]);
-            }
-        }
+    file.close();
+  }
+
+  // Sort by score (descending)
+  for (size_t i = 0; i < m_endlessRanking.size(); i++) {
+    for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
+      if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
+        std::swap(m_endlessRanking[i], m_endlessRanking[j]);
+      }
     }
+  }
 }
 
 /**
@@ -134,35 +133,35 @@ void RankingWidget::loadEndlessRanking() {
  * 从文件中读取挑战模式的排名数据并按关卡和得分降序排序
  */
 void RankingWidget::loadChallengeRanking() {
-    m_challengeRanking.clear();
-    QFile file("challenge_ranking.txt");
-    
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            QStringList parts = line.split(",");
-            if (parts.size() >= 2) {
-                RankingItem item;
-                item.name = parts[0];
-                item.score = parts[1].toInt();
-                item.level = parts.size() > 2 ? parts[2].toInt() : 0;
-                m_challengeRanking.push_back(item);
-            }
-        }
-        file.close();
+  m_challengeRanking.clear();
+  QFile file("challenge_ranking.txt");
+
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+      QString line = in.readLine();
+      QStringList parts = line.split(",");
+      if (parts.size() >= 2) {
+        RankingItem item;
+        item.name = parts[0];
+        item.score = parts[1].toInt();
+        item.level = parts.size() > 2 ? parts[2].toInt() : 0;
+        m_challengeRanking.push_back(item);
+      }
     }
-    
-    // Sort by level (descending), then by score
-    for (size_t i = 0; i < m_challengeRanking.size(); i++) {
-        for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
-            if (m_challengeRanking[i].level < m_challengeRanking[j].level || 
-                (m_challengeRanking[i].level == m_challengeRanking[j].level && 
-                 m_challengeRanking[i].score < m_challengeRanking[j].score)) {
-                std::swap(m_challengeRanking[i], m_challengeRanking[j]);
-            }
-        }
+    file.close();
+  }
+
+  // Sort by level (descending), then by score
+  for (size_t i = 0; i < m_challengeRanking.size(); i++) {
+    for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
+      if (m_challengeRanking[i].level < m_challengeRanking[j].level ||
+          (m_challengeRanking[i].level == m_challengeRanking[j].level &&
+           m_challengeRanking[i].score < m_challengeRanking[j].score)) {
+        std::swap(m_challengeRanking[i], m_challengeRanking[j]);
+      }
     }
+  }
 }
 
 /**
@@ -170,15 +169,15 @@ void RankingWidget::loadChallengeRanking() {
  * 将无尽模式的排名数据保存到文件中
  */
 void RankingWidget::saveEndlessRanking() {
-    QFile file("endless_ranking.txt");
-    
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        for (const auto& item : m_endlessRanking) {
-            out << item.name << "," << item.score << "\n";
-        }
-        file.close();
+  QFile file("endless_ranking.txt");
+
+  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QTextStream out(&file);
+    for (const auto &item : m_endlessRanking) {
+      out << item.name << "," << item.score << "\n";
     }
+    file.close();
+  }
 }
 
 /**
@@ -186,15 +185,15 @@ void RankingWidget::saveEndlessRanking() {
  * 将挑战模式的排名数据保存到文件中
  */
 void RankingWidget::saveChallengeRanking() {
-    QFile file("challenge_ranking.txt");
-    
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        for (const auto& item : m_challengeRanking) {
-            out << item.name << "," << item.score << "," << item.level << "\n";
-        }
-        file.close();
+  QFile file("challenge_ranking.txt");
+
+  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QTextStream out(&file);
+    for (const auto &item : m_challengeRanking) {
+      out << item.name << "," << item.score << "," << item.level << "\n";
     }
+    file.close();
+  }
 }
 
 /**
@@ -202,16 +201,17 @@ void RankingWidget::saveChallengeRanking() {
  * 在界面上显示无尽模式的排名数据
  */
 void RankingWidget::displayEndlessRanking() {
-    ui->list_endless->clear();
-    for (size_t i = 0; i < m_endlessRanking.size(); i++) {
-        const auto& item = m_endlessRanking[i];
-        QString text = QString("%1. %2 - %3分").arg(i + 1).arg(item.name).arg(item.score);
-        ui->list_endless->addItem(text);
-    }
-    
-    if (m_endlessRanking.empty()) {
-        ui->list_endless->addItem("暂无记录");
-    }
+  ui->list_endless->clear();
+  for (size_t i = 0; i < m_endlessRanking.size(); i++) {
+    const auto &item = m_endlessRanking[i];
+    QString text =
+        QString("%1. %2 - %3分").arg(i + 1).arg(item.name).arg(item.score);
+    ui->list_endless->addItem(text);
+  }
+
+  if (m_endlessRanking.empty()) {
+    ui->list_endless->addItem("暂无记录");
+  }
 }
 
 /**
@@ -219,16 +219,20 @@ void RankingWidget::displayEndlessRanking() {
  * 在界面上显示挑战模式的排名数据
  */
 void RankingWidget::displayChallengeRanking() {
-    ui->list_challenge->clear();
-    for (size_t i = 0; i < m_challengeRanking.size(); i++) {
-        const auto& item = m_challengeRanking[i];
-        QString text = QString("%1. %2 - 第%3关，%4分").arg(i + 1).arg(item.name).arg(item.level).arg(item.score);
-        ui->list_challenge->addItem(text);
-    }
-    
-    if (m_challengeRanking.empty()) {
-        ui->list_challenge->addItem("暂无记录");
-    }
+  ui->list_challenge->clear();
+  for (size_t i = 0; i < m_challengeRanking.size(); i++) {
+    const auto &item = m_challengeRanking[i];
+    QString text = QString("%1. %2 - 第%3关，%4分")
+                       .arg(i + 1)
+                       .arg(item.name)
+                       .arg(item.level)
+                       .arg(item.score);
+    ui->list_challenge->addItem(text);
+  }
+
+  if (m_challengeRanking.empty()) {
+    ui->list_challenge->addItem("暂无记录");
+  }
 }
 
 /**
@@ -239,52 +243,52 @@ void RankingWidget::displayChallengeRanking() {
  * @param level 关卡数（仅挑战模式有效）
  */
 void RankingWidget::updateRanking(const QString &mode, int score, int level) {
-    RankingItem newItem;
-    newItem.name = "玩家";
-    newItem.score = score;
-    newItem.level = level;
-    
-    if (mode == "endless") {
-        m_endlessRanking.push_back(newItem);
-        
-        // Sort again
-        for (size_t i = 0; i < m_endlessRanking.size(); i++) {
-            for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
-                if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
-                    std::swap(m_endlessRanking[i], m_endlessRanking[j]);
-                }
-            }
+  RankingItem newItem;
+  newItem.name = "玩家";
+  newItem.score = score;
+  newItem.level = level;
+
+  if (mode == "endless") {
+    m_endlessRanking.push_back(newItem);
+
+    // Sort again
+    for (size_t i = 0; i < m_endlessRanking.size(); i++) {
+      for (size_t j = i + 1; j < m_endlessRanking.size(); j++) {
+        if (m_endlessRanking[i].score < m_endlessRanking[j].score) {
+          std::swap(m_endlessRanking[i], m_endlessRanking[j]);
         }
-        
-        // Keep only top 10
-        if (m_endlessRanking.size() > 10) {
-            m_endlessRanking.resize(10);
-        }
-        
-        saveEndlessRanking();
-        displayEndlessRanking();
-    } else if (mode == "challenge") {
-        m_challengeRanking.push_back(newItem);
-        
-        // Sort again
-        for (size_t i = 0; i < m_challengeRanking.size(); i++) {
-            for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
-                if (m_challengeRanking[i].level < m_challengeRanking[j].level || 
-                    (m_challengeRanking[i].level == m_challengeRanking[j].level && 
-                     m_challengeRanking[i].score < m_challengeRanking[j].score)) {
-                    std::swap(m_challengeRanking[i], m_challengeRanking[j]);
-                }
-            }
-        }
-        
-        // Keep only top 10
-        if (m_challengeRanking.size() > 10) {
-            m_challengeRanking.resize(10);
-        }
-        
-        saveChallengeRanking();
-        displayChallengeRanking();
+      }
     }
+
+    // Keep only top 10
+    if (m_endlessRanking.size() > 10) {
+      m_endlessRanking.resize(10);
+    }
+
+    saveEndlessRanking();
+    displayEndlessRanking();
+  } else if (mode == "challenge") {
+    m_challengeRanking.push_back(newItem);
+
+    // Sort again
+    for (size_t i = 0; i < m_challengeRanking.size(); i++) {
+      for (size_t j = i + 1; j < m_challengeRanking.size(); j++) {
+        if (m_challengeRanking[i].level < m_challengeRanking[j].level ||
+            (m_challengeRanking[i].level == m_challengeRanking[j].level &&
+             m_challengeRanking[i].score < m_challengeRanking[j].score)) {
+          std::swap(m_challengeRanking[i], m_challengeRanking[j]);
+        }
+      }
+    }
+
+    // Keep only top 10
+    if (m_challengeRanking.size() > 10) {
+      m_challengeRanking.resize(10);
+    }
+
+    saveChallengeRanking();
+    displayChallengeRanking();
+  }
 }
 
 /**
@@ -292,7 +296,7 @@ void RankingWidget::updateRanking(const QString &mode, int score, int level) {
  * @return 无尽模式排行榜数据
  */
 std::vector<RankingItem> RankingWidget::getEndlessRanking() const {
-    return m_endlessRanking;
+  return m_endlessRanking;
 }
 
 /**
@@ -300,13 +304,52 @@ std::vector<RankingItem> RankingWidget::getEndlessRanking() const {
  * @return 挑战模式排行榜数据
  */
 std::vector<RankingItem> RankingWidget::getChallengeRanking() const {
-    return m_challengeRanking;
+  return m_challengeRanking;
 }
 
 /**
  * @brief 返回菜单按钮点击槽函数
  * 发出返回菜单信号
  */
-void RankingWidget::on_btn_back_clicked() {
-    emit backToMenu();
+void RankingWidget::on_btn_back_clicked() { emit backToMenu(); }
+
+/**
+ * @brief 清空排行榜按钮点击槽函数
+ * 清空无尽模式和挑战模式的排行榜数据并更新UI
+ */
+void RankingWidget::on_btn_clearRanking_clicked() {
+  // 显示确认对话框
+  QMessageBox msgBox;
+  msgBox.setWindowTitle(QString::fromUtf8("清空排行榜"));
+  msgBox.setText(
+      QString::fromUtf8("确定要清空所有排行榜数据吗？此操作不可恢复。"));
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::No);
+
+  int reply = msgBox.exec();
+
+  if (reply == QMessageBox::Yes) {
+    // 清空排行榜数据
+    m_endlessRanking.clear();
+    m_challengeRanking.clear();
+
+    // 保存空的排行榜数据到文件
+    saveEndlessRanking();
+    saveChallengeRanking();
+
+    // 更新UI显示
+    displayEndlessRanking();
+    displayChallengeRanking();
+
+    // 显示操作成功提示
+    QMessageBox msgBox; // 指定父对象
+    msgBox.setWindowTitle("提示");
+    msgBox.setText("操作成功！");
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setStyleSheet(
+        "QLabel { color: black; } QPushButton { color: black; }");
+
+    msgBox.exec();
+  }
 }
