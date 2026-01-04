@@ -5,7 +5,7 @@
 
 struct Gem {
   GemType type;   // 宝石颜色
-  bool isMatched; // 标记是否处于待消除状态 (用于UI闪烁特效)
+  bool isMatched; // 标记是否处于待消除状态
 
   // 构造函数
   Gem(GemType t = EMPTY) : type(t), isMatched(false) {}

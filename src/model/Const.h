@@ -41,4 +41,10 @@ enum GameState {
   GAME_OVER  // 游戏结束
 };
 
+// 游戏模式枚举
+enum GameMode {
+  ENDLESS,  ///< 无尽模式，无时间限制
+  CHALLENGE ///< 挑战模式，有时间限制和关卡目标
+};
+
 #endif // CONST_H

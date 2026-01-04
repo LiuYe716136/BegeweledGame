@@ -1,6 +1,7 @@
 #ifndef GAMEWIDGET_H
 #define GAMEWIDGET_H
 
+#include "Const.h"
 #include "GameMap.h"
 #include <QMediaPlayer>
 #include <QMouseEvent>
@@ -10,9 +11,6 @@
 #include <QString>
 #include <QTimer>
 #include <QWidget>
-
-// 前置声明
-class RankingWidget;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,14 +26,6 @@ class GameWidget : public QWidget {
   Q_OBJECT
 
 public:
-  /**
-   * @brief 游戏模式枚举
-   */
-  enum GameMode {
-    ENDLESS,  ///< 无尽模式，无时间限制
-    CHALLENGE ///< 挑战模式，有时间限制和关卡目标
-  };
-
   /**
    * @brief 构造函数
    * @param parent 父窗口部件
@@ -54,28 +44,22 @@ public:
   void setGameMode(GameMode mode);
 
   /**
+   * @brief 获取当前游戏模式
+   * @return 当前游戏模式
+   */
+  GameMode getGameMode() const;
+
+  /**
    * @brief 设置挑战模式的关卡
    * @param level 关卡数
    */
   void setChallengeLevel(int level);
 
   /**
-   * @brief 获取当前游戏模式
-   * @return 当前游戏模式
-   */
-  GameMode gameMode() const;
-
-  /**
    * @brief 设置背景音乐播放器
    * @param player 音乐播放器指针
    */
   void setBgMusicPlayer(QMediaPlayer *player);
-
-  /**
-   * @brief 更新排行榜部件
-   * @param rankingWidget 排行榜部件指针
-   */
-  void updateRankingWidget(RankingWidget *rankingWidget);
 
 signals:
   /**
@@ -145,8 +129,9 @@ private:
   // 游戏状态
   QPoint m_selectedPos; ///< 当前选中宝石的数组行列坐标 (-1,-1 表示未选)
   GameState m_state;    ///< 当前游戏阶段
-  int m_score;          ///< 当前得分
   GameMode m_gameMode;  ///< 游戏模式
+
+  int m_score;          ///< 当前得分
   int m_challengeLevel; ///< 当前关卡
   int m_targetScore;    ///< 目标分数（闯关模式）
 
@@ -157,8 +142,7 @@ private:
   void initGame();     ///< 游戏初始化
   int m_remainingTime; ///< 剩余时间（秒）
 
-  RankingWidget *m_rankingWidget; ///< 排行榜部件指针
-  QPushButton *m_musicBtn;        ///< 音乐控制按钮
+  QPushButton *m_musicBtn; ///< 音乐控制按钮
 
   /**
    * @brief 获取挑战模式下的关卡时间

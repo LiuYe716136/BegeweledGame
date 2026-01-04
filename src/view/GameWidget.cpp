@@ -17,11 +17,10 @@ GameWidget::GameWidget(QWidget *parent)
       m_countTimer(new QTimer(this)), // 初始化计时定时器
       m_selectedPos(-1, -1), m_state(IDLE), m_score(0), m_gameMode(ENDLESS),
       m_challengeLevel(1), m_targetScore(1000), m_bgMusicPlayer(nullptr),
-      m_musicEnabled(true), m_rankingWidget(nullptr), m_musicBtn(nullptr),
-      m_isHinting(false) {
+      m_musicEnabled(true), m_musicBtn(nullptr), m_isHinting(false) {
   ui->setupUi(this);
 
-  // 初始化...
+  // 初始化
   initGame();
 
   // 连接定时器信号
@@ -41,6 +40,51 @@ GameWidget::~GameWidget() {
   delete m_countTimer;
   delete ui;
 }
+
+/**
+ * @brief 初始化游戏
+ * 重置游戏状态、地图、分数和UI
+ */
+void GameWidget::initGame() {
+  // 初始化逻辑数据
+  m_game->clearHistory();
+  m_game->init();
+
+  m_score = 0;
+  m_selectedPos = QPoint(-1, -1);
+  m_state = IDLE; // 重置游戏状态
+
+  // 设置闯关模式的剩余时间（每关递减）
+  int totalTime =
+      (m_gameMode == CHALLENGE) ? getChallengeTime(m_challengeLevel) : 0;
+  m_remainingTime = totalTime;
+  ui->progressBar_time->setRange(0, totalTime);
+  ui->progressBar_time->setValue(totalTime);
+
+  // UI 更新
+  ui->label_score->setText("0");
+
+  // 更新目标分数显示
+  if (m_gameMode == CHALLENGE) {
+    ui->label_tarScore->setText(QString::number(m_targetScore));
+  }
+
+  // 开始计时 - 仅在闯关模式下
+  if (m_gameMode == CHALLENGE) {
+    m_countTimer->start(1000); // 每秒触发一次
+    ui->progressBar_time->setVisible(true);
+    ui->label_target->setVisible(true);
+    ui->label_tarScore->setVisible(true);
+  } else {
+    m_countTimer->stop(); // 无尽模式禁用计时
+    ui->progressBar_time->setVisible(false);
+    ui->label_target->setVisible(false);
+    ui->label_tarScore->setVisible(false);
+  }
+
+  update();
+}
+
 /**
  * @brief 更新时间槽函数
  * 挑战模式下每秒更新剩余时间，处理关卡完成和时间耗尽逻辑
@@ -90,7 +134,7 @@ void GameWidget::updateTimeCount() {
 
     QMessageBox msgBox;
     msgBox.setWindowTitle("游戏结束");
-    msgBox.setText(QString("时间已到！\n你完成了第%1关！\n最终得分是：%2")
+    msgBox.setText(QString("时间已到！\n你未完成第%1关！\n最终得分是：%2")
                        .arg(m_challengeLevel)
                        .arg(m_score));
     msgBox.setStyleSheet(
@@ -100,6 +144,64 @@ void GameWidget::updateTimeCount() {
     emit gameOver(m_score, m_challengeLevel);
     emit backToMenu();
   }
+}
+
+/**
+ * @brief 游戏状态更新函数（核心）
+ * 由定时器触发，处理消除->下落->生成的流程
+ */
+void GameWidget::updateGameState() {
+  std::vector<QPoint> matches = m_game->checkMatches();
+
+  if (!matches.empty()) {
+    // 1. 计算本次消除的总分（按宝石颜色累加分值）
+    int roundScore = 0;
+    for (const auto &point : matches) {
+      int r = point.y(); // QPoint的y对应行，x对应列
+      int c = point.x();
+      roundScore += m_game->getGemScore(r, c); // 调用获取对应颜色分值的方法
+    }
+
+    // 2. 执行消除操作
+    m_game->eliminate(matches);
+
+    // 3. 更新分数并刷新UI
+    m_score += roundScore;
+    ui->label_score->setText(QString::number(m_score));
+
+    // 继续下一个消除步骤
+    m_stateTimer->start(500);
+  } else {
+    // 无匹配时应用重力
+    m_game->applyGravity();
+    // 检查新的匹配
+    matches = m_game->checkMatches();
+    if (!matches.empty()) {
+      // 有新匹配继续消除
+      m_stateTimer->start(500);
+    } else {
+      // 下落完成后仍无匹配，检查是否为死局
+      if (!m_game->hasPossibleMove()) {
+        // 1. 显示死局提示对话框
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("游戏提示");
+        msgBox.setText("当前已死局，即将重置地图！分数将保留。");
+        msgBox.setStyleSheet(
+            "QLabel { color: black; } QPushButton { color: black; }");
+        msgBox.exec();
+
+        // 2. 重置地图但不重置分数
+        m_game->reset(); // 仅重置地图宝石布局
+
+        // 3. 分数保持不变，无需修改m_score和label_score
+        qDebug() << "死局！已重置地图，分数保留";
+      }
+      // 停止定时器
+      m_stateTimer->stop();
+    }
+  }
+  // 刷新界面
+  update();
 }
 
 /**
@@ -133,7 +235,7 @@ void GameWidget::paintEvent(QPaintEvent *event) {
   for (int r = 0; r < ROW; r++) {
     for (int c = 0; c < COL; c++) {
       // 获取宝石类型
-      GemType gemType = m_game->getType(r, c);
+      GemType gemType = m_game->getGemType(r, c);
 
       // 根据宝石类型获取图片路径
       QString imagePath;
@@ -251,34 +353,34 @@ void GameWidget::mousePressEvent(QMouseEvent *event) {
     return;
   }
 
-  int r, c;
-  if (!screenToRowCol(event->pos(), r, c)) {
+  int cur_r, cur_c;
+  if (!screenToRowCol(event->pos(), cur_r, cur_c)) {
     return;
   }
 
   if (m_selectedPos == QPoint(-1, -1)) {
     // 第一次点击，选中宝石
-    m_selectedPos = QPoint(c, r);
+    m_selectedPos = QPoint(cur_c, cur_r);
   } else {
     // 第二次点击，检查是否相邻
     int selectedR = m_selectedPos.y();
     int selectedC = m_selectedPos.x();
     bool isAdjacent = false;
-    if ((abs(r - selectedR) == 1 && c == selectedC) ||
-        (abs(c - selectedC) == 1 && r == selectedR)) {
+    if ((abs(cur_r - selectedR) == 1 && cur_c == selectedC) ||
+        (abs(cur_c - selectedC) == 1 && cur_r == selectedR)) {
       isAdjacent = true;
     }
 
     if (isAdjacent) {
       // 交换前保存当前状态和分数
-      m_game->saveState(m_score);
-      m_game->swap(selectedR, selectedC, r, c);
+      m_game->saveCurState(m_score);
+      m_game->swap(selectedR, selectedC, cur_r, cur_c);
 
       std::vector<QPoint> matches = m_game->checkMatches();
 
       if (matches.empty()) {
         // 无匹配时交换回来，并删除无效快照
-        m_game->swap(r, c, selectedR, selectedC);
+        m_game->swap(cur_r, cur_c, selectedR, selectedC);
         m_game->popLastState(); // 关键：清除无效状态
       } else {
         // 有匹配时开始消除流程
@@ -318,6 +420,55 @@ void GameWidget::on_btn_hint_clicked() {
 }
 
 /**
+ * @brief 撤销按钮点击槽函数
+ * 撤销上一步操作，恢复到之前的游戏状态
+ */
+void GameWidget::on_btn_undo_clicked() {
+  if (m_game->undo()) {
+    // 从GameMap获取撤销前的分数并更新
+    m_score = m_game->getLastUndoScore();
+    ui->label_score->setText(QString::number(m_score));
+    update();
+  }
+}
+
+/**
+ * @brief 结束游戏按钮点击槽函数
+ * 处理结束游戏的逻辑，停止计时，显示最终得分，然后返回主菜单
+ */
+void GameWidget::on_btn_endGame_clicked() {
+  // 停止计时器
+  m_countTimer->stop();
+  m_stateTimer->stop();
+
+  // 弹出消息框显示最终得分
+  QMessageBox msgBox;
+  if (m_gameMode == CHALLENGE) {
+    msgBox.setWindowTitle("游戏结束");
+    if (m_score >= m_targetScore) {
+      msgBox.setText(QString("你结束了游戏！\n你完成了第%1关！\n最终得分是：%2")
+                         .arg(m_challengeLevel)
+                         .arg(m_score));
+    } else {
+      msgBox.setText(QString("你结束了游戏！\n你未完成第%1关！\n最终得分是：%2")
+                         .arg(m_challengeLevel)
+                         .arg(m_score));
+    }
+
+  } else {
+    msgBox.setWindowTitle("游戏结束");
+    msgBox.setText(QString("你结束了游戏！\n最终得分是：%1").arg(m_score));
+  }
+  msgBox.setStyleSheet(
+      "QLabel { color: black; } QPushButton { color: black; }");
+  msgBox.exec();
+
+  // 发出游戏结束信号和返回菜单信号
+  emit gameOver(m_score, m_challengeLevel);
+  emit backToMenu();
+}
+
+/**
  * @brief 查找最佳移动
  * 遍历所有可能的移动，找到能获得最高分数的交换
  */
@@ -340,8 +491,8 @@ void GameWidget::findBestMove() {
         if (nr < 0 || nr >= ROW || nc < 0 || nc >= COL)
           continue;
 
-        GemType type1 = m_game->getType(r, c);
-        GemType type2 = m_game->getType(nr, nc);
+        GemType type1 = m_game->getGemType(r, c);
+        GemType type2 = m_game->getGemType(nr, nc);
 
         if (type1 == type2)
           continue; // 相同类型宝石交换无意义
@@ -373,149 +524,6 @@ void GameWidget::findBestMove() {
       }
     }
   }
-}
-
-/**
- * @brief 撤销按钮点击槽函数
- * 撤销上一步操作，恢复到之前的游戏状态
- */
-void GameWidget::on_btn_undo_clicked() {
-  if (m_game->undo()) {
-    // 从GameMap获取撤销前的分数并更新
-    m_score = m_game->getLastUndoScore();
-    ui->label_score->setText(QString::number(m_score));
-    update();
-  }
-}
-
-/**
- * @brief 结束游戏按钮点击槽函数
- * 处理结束游戏的逻辑，停止计时，显示最终得分，然后返回主菜单
- */
-void GameWidget::on_btn_endGame_clicked() {
-  // 停止计时器
-  m_countTimer->stop();
-  m_stateTimer->stop();
-
-  // 弹出消息框显示最终得分
-  QMessageBox msgBox;
-  if (m_gameMode == CHALLENGE) {
-    msgBox.setWindowTitle("游戏结束");
-    msgBox.setText(QString("你结束了游戏！\n你完成了第%1关！\n最终得分是：%2")
-                       .arg(m_challengeLevel)
-                       .arg(m_score));
-  } else {
-    msgBox.setWindowTitle("游戏结束");
-    msgBox.setText(QString("你结束了游戏！\n最终得分是：%1").arg(m_score));
-  }
-  msgBox.setStyleSheet(
-      "QLabel { color: black; } QPushButton { color: black; }");
-  msgBox.exec();
-
-  // 发出游戏结束信号和返回菜单信号
-  emit gameOver(m_score, m_challengeLevel);
-  emit backToMenu();
-}
-
-/**
- * @brief 游戏状态更新函数（核心）
- * 由定时器触发，处理消除->下落->生成的流程
- */
-void GameWidget::updateGameState() {
-  std::vector<QPoint> matches = m_game->checkMatches();
-
-  if (!matches.empty()) {
-    // 1. 计算本次消除的总分（按宝石颜色累加分值）
-    int roundScore = 0;
-    for (const auto &point : matches) {
-      int r = point.y(); // QPoint的y对应行，x对应列
-      int c = point.x();
-      roundScore += m_game->getGemScore(r, c); // 调用获取对应颜色分值的方法
-    }
-
-    // 2. 执行消除操作
-    m_game->eliminate(matches);
-
-    // 3. 更新分数并刷新UI
-    m_score += roundScore;
-    ui->label_score->setText(QString::number(m_score));
-
-    // 继续下一个消除步骤
-    m_stateTimer->start(500);
-  } else {
-    // 无匹配时应用重力
-    m_game->applyGravity();
-    // 检查新的匹配
-    matches = m_game->checkMatches();
-    if (!matches.empty()) {
-      // 有新匹配继续消除
-      m_stateTimer->start(500);
-    } else {
-      // 下落完成后仍无匹配，检查是否为死局
-      if (!m_game->hasPossibleMove()) {
-        // 1. 显示死局提示对话框
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("游戏提示");
-        msgBox.setText("当前已死局，即将重置地图！分数将保留。");
-        msgBox.setStyleSheet(
-            "QLabel { color: black; } QPushButton { color: black; }");
-        msgBox.exec();
-
-        // 2. 重置地图但不重置分数
-        m_game->reset(); // 仅重置地图宝石布局
-
-        // 3. 分数保持不变，无需修改m_score和label_score
-        qDebug() << "死局！已重置地图，分数保留";
-      }
-      // 停止定时器
-      m_stateTimer->stop();
-    }
-  }
-  // 刷新界面
-  update();
-}
-/**
- * @brief 初始化游戏
- * 重置游戏状态、地图、分数和UI
- */
-void GameWidget::initGame() {
-  // 初始化逻辑数据
-  m_game->clearHistory();
-  m_game->init();
-
-  m_score = 0;
-  m_selectedPos = QPoint(-1, -1);
-  m_state = IDLE; // 重置游戏状态
-
-  // 设置闯关模式的剩余时间（每关递减）
-  int totalTime =
-      (m_gameMode == CHALLENGE) ? getChallengeTime(m_challengeLevel) : 0;
-  m_remainingTime = totalTime;
-  ui->progressBar_time->setRange(0, totalTime);
-  ui->progressBar_time->setValue(totalTime);
-
-  // UI 更新
-  ui->label_score->setText("0");
-
-  // 更新目标分数显示
-  if (m_gameMode == CHALLENGE) {
-    ui->label_tarScore->setText(QString::number(m_targetScore));
-  }
-
-  // 开始计时 - 仅在闯关模式下
-  if (m_gameMode == CHALLENGE) {
-    m_countTimer->start(1000); // 每秒触发一次
-    ui->progressBar_time->setVisible(true);
-    ui->label_target->setVisible(true);
-    ui->label_tarScore->setVisible(true);
-  } else {
-    m_countTimer->stop(); // 无尽模式禁用计时
-    ui->progressBar_time->setVisible(false);
-    ui->label_target->setVisible(false);
-    ui->label_tarScore->setVisible(false);
-  }
-
-  update();
 }
 
 /**
@@ -568,6 +576,12 @@ void GameWidget::setGameMode(GameMode mode) {
 }
 
 /**
+ * @brief 获取当前游戏模式
+ * @return 当前游戏模式
+ */
+GameMode GameWidget::getGameMode() const { return m_gameMode; }
+
+/**
  * @brief 设置挑战模式的关卡
  * @param level 关卡数
  */
@@ -599,24 +613,10 @@ int GameWidget::getChallengeTargetScore(int level) const {
 }
 
 /**
- * @brief 获取当前游戏模式
- * @return 当前游戏模式
- */
-GameWidget::GameMode GameWidget::gameMode() const { return m_gameMode; }
-
-/**
  * @brief 设置背景音乐播放器
  * @param player 音乐播放器指针
  */
 void GameWidget::setBgMusicPlayer(QMediaPlayer *player) {
   m_bgMusicPlayer = player;
   m_musicEnabled = true;
-}
-
-/**
- * @brief 更新排行榜部件
- * @param rankingWidget 排行榜部件指针
- */
-void GameWidget::updateRankingWidget(RankingWidget *rankingWidget) {
-  m_rankingWidget = rankingWidget;
 }

@@ -70,19 +70,16 @@ int main(int argc, char *argv[]) {
   // 为菜单窗口设置音乐播放器
   menuWidget.setBgMusicPlayer(&bgMusicPlayer);
 
-  // 更新排行榜窗口引用
-  gameWidget.updateRankingWidget(&rankingWidget);
-
   // 连接菜单信号，显示对应的窗口
   QObject::connect(&menuWidget, &MenuWidget::startEndlessMode, [&]() {
-    gameWidget.setGameMode(GameWidget::ENDLESS); ///< 设置无尽模式
+    gameWidget.setGameMode(ENDLESS); ///< 设置无尽模式
     gameWidget.setChallengeLevel(1);
     menuWidget.hide();
     gameWidget.show();
   });
 
   QObject::connect(&menuWidget, &MenuWidget::startChallengeMode, [&]() {
-    gameWidget.setGameMode(GameWidget::CHALLENGE); ///< 设置挑战模式
+    gameWidget.setGameMode(CHALLENGE); ///< 设置挑战模式
     gameWidget.setChallengeLevel(1);
     menuWidget.hide();
     gameWidget.show();
@@ -103,7 +100,7 @@ int main(int argc, char *argv[]) {
   QObject::connect(&gameWidget, &GameWidget::gameOver,
                    [&](int score, int level) {
                      // 根据游戏模式更新对应的排行榜
-                     if (gameWidget.gameMode() == GameWidget::ENDLESS) {
+                     if (gameWidget.getGameMode() == ENDLESS) {
                        rankingWidget.updateRanking("endless", score);
                      } else {
                        rankingWidget.updateRanking("challenge", score, level);
